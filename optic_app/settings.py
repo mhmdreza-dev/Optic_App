@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'accounts.apps.AccountsConfig',
+    'education.apps.EducationConfig',
     'tickets.apps.TicketsConfig',
     'jalali_date',
     'django_jalali',
