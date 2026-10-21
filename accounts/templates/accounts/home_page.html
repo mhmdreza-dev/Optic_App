@@ -1,0 +1,57 @@
+{% extends "main.html" %}
+
+{% block title %}داشبورد مدیریتی تیکت‌ها{% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4" dir="rtl">
+    <!-- هدر خوش آمدگویی -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="fw-bold text-dark">سلام،{{request.user.first_name }} {{request.user.last_name}} عزیز </h4>
+            <p class="text-muted small">خلاصه وضعیت و آمارهای تیکت‌های شما در سیستم</p>
+            <hr class="my-4 border-secondary border-1 opacity-20">
+        </div>
+    </div>
+    
+    <!-- کارت‌های آماری (Cards) -->
+    <div class="row g-3 mb-4">
+        <!-- کل تیکت‌ها -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm border-start border-end border-primary border-4">
+                <div class="card-body">
+                    <div class="text-muted small fw-bold mb-1">کل تیکت‌های ثبت شده</div>
+                    <div class="h3 fw-bold text-dark mb-0">{{ total_tickets }}</div>
+                </div>
+            </div>
+        </div>
+        <!-- تیکت‌های باز -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm border-start border-end border-warning border-4">
+                <div class="card-body">
+                    <div class="text-muted small fw-bold mb-1">تیکت‌های باز</div>
+                    <div class="h3 fw-bold text-warning mb-0">{{ open_tickets }}</div>
+                </div>
+            </div>
+        </div>
+        <!-- در حال بررسی -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm border-start border-end border-info border-4">
+                <div class="card-body">
+                    <div class="text-muted small fw-bold mb-1">در حال بررسی</div>
+                    <div class="h3 fw-bold text-info mb-0">{{ in_progress_tickets }}</div>
+                </div>
+            </div>
+        </div>
+        <!-- بسته‌شده -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm border-start border-end border-success border-4">
+                <div class="card-body">
+                    <div class="text-muted small fw-bold mb-1">تیکت‌های بسته شده</div>
+                    <div class="h3 fw-bold text-success mb-0">{{ closed_tickets }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

@@ -1,0 +1,40 @@
+{%load static%}
+<div>
+    <nav class="bg-color navbar navbar-expand-md fixed-top ">
+        <div class="container-fluid">
+            <a class="navbar-brand nav-title" href="#">اتوماسیون اداری شرکت درنا</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="text-start">
+                <button type="button" class="btn position-relative">
+                    <img src="{% static 'icons/notifications.svg' %}" title="اعلان ها" />
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        99+
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                </button>
+                <a type="button" class="btn" data-bs-toggle="send_file_modal" data-bs-target="#send_file_modal"
+                    href=""><img src="{% static 'icons/send_file.svg' %}" title="ارسال فایل" width="24" height="24" />
+                </a>
+
+                {% if user.is_authenticated %} {% if user.is_staff or user.is_superuser%}
+                <a type="button" class="btn" href="/admin/"><img src="{% static 'icons/admin_panel_settings.svg' %}"
+                        title="پنل ادمین" /></a>
+                {% endif %}
+                <a type="button" class="btn" href=""><img src="{% static 'icons/account.svg' %}" title="حساب کاربری"
+                        width="24" height="24" />
+                </a>
+                <a type="button" class="btn" href="{% url 'accounts:user_logout' %}">
+                    <img src="{% static 'icons/logout.svg' %}" title="خروج از حساب" /></a>
+
+                {% else %}
+                <a type="button" class="btn btn-warning" href="">ثبت نام</a>
+                <a type="button" class="btn btn-success" href="{% url 'accounts:user_login'%}">ورود</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</div>

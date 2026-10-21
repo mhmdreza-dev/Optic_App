@@ -1,0 +1,324 @@
+{% load static%}
+<h5 class="fw-bold mb-3 d-flex justify-content-between align-items-center"">
+      شماره تیکت :{{ ticket.ticket_number }}
+
+    {% if ticket.status == "open" %} 
+<button type="button" class="btn btn-warning btn-sm  withdrawal-ticket-btn" 
+        data-url="{% url 'tickets:withdrawal_ticket' ticket.id %}" 
+        data-csrf="{{ csrf_token }}">
+    برداشتن تیکت
+</button>
+    
+
+    {% elif ticket.status == "progress" %}
+    <button type="button" class="btn btn-success btn-sm close-ticket-btn" 
+        data-url="{% url 'tickets:close_ticket' ticket.id %}"  data-csrf="{{ csrf_token }}">
+        بستن تیکت
+    </button>
+
+
+    {% elif ticket.status == "closed" %}
+    <button type="button" class="btn btn-secondary btn-sm" >
+        بسته شده
+    </button>
+
+    {% endif %}
+
+</h5>
+<div class="ticket-user-box" >
+
+
+    <div class="ticket-user-row mt-2">
+
+        <span class="ticket-user-label">
+            <img src="{% static 'icons/account1.png' %}" width="30">
+            ثبت شده توسط :
+        </span>
+
+        <span class="ticket-user-info">
+            {{ ticket.creator.first_name }} {{ ticket.creator.last_name }}
+            <span class="badge bg-light text-dark">{{ ticket.creator.position }} -  واحد {{ ticket.creator.unit }} </span>
+            | <span class="badge bg-light text-dark">{{ ticket.creator.branch.branch_name }}</span>
+        </span>
+
+        <button type="button"
+            class="btn btn-outline-info btn-sm contact-btn"
+            data-bs-container="body"
+            data-bs-toggle="popover"
+            data-bs-placement="right"
+            data-bs-html="true"
+            data-bs-content="
+                موبایل: {{ ticket.taken_by.phone }}<br>
+                تلفن شعبه: {{ ticket.creator.branch.phone }}<br>
+                داخلی: {{ ticket.creator.phoneextensions }}
+            ">
+            
+            اطلاعات تماس
+        </button>
+    </div>
+
+    {% if ticket.taken_by %}
+    <hr>
+    <div class="ticket-user-row mt-2">
+
+        <span class="ticket-user-label">
+            <img src="{% static 'icons/account1.png' %}" width="30">
+            برداشته شده توسط :
+        </span>
+
+        <span class="ticket-user-info">
+            {{ ticket.taken_by.first_name }} {{ ticket.taken_by.last_name }}
+            <span class="badge bg-light text-dark">{{ ticket.taken_by.position }} -  واحد {{ ticket.taken_by.unit }}  </span>
+            |<span class="badge bg-light text-dark">{{ ticket.taken_by.branch.branch_name }}</span>
+        </span>
+
+        <button type="button"
+            class="btn btn-outline-success btn-sm contact-btn"
+            data-bs-container="body"
+            data-bs-toggle="popover"
+            data-bs-placement="right"
+            data-bs-html="true"
+            data-bs-content="
+                موبایل: {{ ticket.taken_by.phone }}<br>
+                تلفن شعبه: {{ ticket.taken_by.branch.phone }}<br>
+                داخلی: {{ ticket.taken_by.phoneextensions }}
+            ">
+            
+            اطلاعات تماس
+        </button>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+</div>
+<hr>
+
+<div class="mb-2">
+    <strong>عنوان:</strong>
+    {{ ticket.ticket_title }}
+</div>
+
+
+
+<div class="mb-2">
+    <strong>وضعیت:</strong>
+    <span class="badge bg-info">
+        {{ ticket.get_status_display }}
+    </span>
+</div>
+
+<div class="mb-2">
+    <strong>اولویت:</strong>
+    <span class="badge bg-warning">
+        {{ ticket.get_priority_display }}
+    </span>
+</div>
+
+<hr>
+
+<div class="mt-3">
+    <strong>توضیحات:</strong>
+    <div class="border rounded p-3 bg-light mt-2">
+        {{ ticket.description|linebreaks }}
+    </div>
+</div>
+{% if ticket.attachments.count %}
+<!-- نمایش ضمائم تیکت -->
+<div class="attachments-box mt-4">
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    <div class="attachments-header">
+                        <i class="bi bi-paperclip"></i>
+                     ضمائم ({{ ticket.attachments.count }})
+                    </div>
+                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+
+
+                {% for attachment in ticket.attachments.all %}
+
+                <div class="attachment-card">
+                    <div class="attachment-preview">
+
+                        {% with file_url=attachment.file.url|lower %}
+
+                        {% if ".jpg" in file_url or ".jpeg" in file_url or ".png" in file_url or ".webp" in file_url %}
+                        <img src=" {% static 'icons/file_png.svg' %}" class="attachment-img" alt="attachment">
+
+                        {% elif ".pdf" in file_url %}
+                        <img src=" {% static 'icons/file_pdf.svg' %}" class="attachment-img" alt="attachment">
+
+                        {% elif ".zip" in file_url or ".rar" in file_url %}
+                        <img src=" {% static 'icons/file_zip.svg' %}" class="attachment-img" alt="attachment">
+
+                        {% elif ".doc" in file_url or ".docx" in file_url %}
+                        <img src=" {% static 'icons/file_doc.svg' %}" class="attachment-img" alt="attachment">
+
+                        {% elif ".xls" in file_url or ".xlsx" in file_url or ".txt" in file_url %}
+                        <i class="bi bi-file-earmark-excel attachment-icon attachment-excel"></i>
+
+                        {% else %}
+                        <i class="bi bi-file-earmark attachment-icon"></i>
+
+                        {% endif %}
+
+                        {% endwith %}
+
+                    </div>
+                    <div class="attachment-info">
+                        <div class="attachment-name">
+                            {{ attachment.file.name|cut:"tickets/ticket_attachments/" }}
+                        </div>
+
+                        <div class="attachment-meta">
+                            {{ attachment.file.size|filesizeformat }}
+                        </div>
+                    </div>
+
+                    <div class="attachment-actions">
+                        <a href="{{ attachment.file.url }}" class="btn btn-sm btn-outline-primary" download>
+                            <i class="bi bi-download"></i>
+                            دانلود
+                        </a>
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="attachments-empty">
+                    <i class="bi bi-paperclip"></i>
+                    فایلی ضمیمه نشده است
+                </div>
+
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endif %}
+
+{% if ticket.status == 'progress' %}
+<hr>
+{% load humanize %}
+
+<div class="ticket-container">
+    
+    <!-- فرم ارسال پیام -->
+    <div class="card shadow-sm mb-3">
+        <div class="card-body p-3">
+            <form method="POST" action="{% url 'tickets:add_ticket_message' ticket.id %}">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="message-content" class="form-label fw-bold">
+                        <i class="fas fa-edit me-1"></i>
+                        پیام جدید:
+                    </label>
+                    <textarea 
+                        name="content" 
+                        id="message-content"
+                        class="form-control" 
+                        placeholder="پیام خود را اینجا بنویسید..." 
+                        rows="3"
+                        required></textarea>
+                </div>
+                
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary" id="sendMessageBtn">
+                        <i class="fas fa-paper-plane me-1"></i>
+                        ارسال پیام
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endif %}
+{% if ticket.status == 'closed' or ticket.status == 'progress'%}
+<hr>
+    <!-- لیست پیام‌ها -->
+    <div class="ticket-messages-container" id="messagesHistory"
+    style="max-height: 50vh; overflow-y: auto; padding: 15px; background-color: #f8f9fa; border-radius: 10px;">
+        
+        <h6 class="text-muted mb-3">
+            <i class="fas fa-comments"></i>
+            تاریخچه پیام‌ها ({{ ticket.messages.count }} پیام)
+        </h6>
+        
+        {% for message in ticket.messages.all %}
+            <div class="message-wrapper mb-3 {% if message.is_staff_reply %}staff-message{% else %}user-message{% endif %}">
+                
+                <!-- پیام پشتیبانی (چپ چین) -->
+                {% if message.sender.is_staff %}
+                    <div class="d-flex justify-content-end">
+                        <div class="card bg-light border-success shadow-sm" style="max-width: 75%;">
+                            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle bg-success text-white ms-2">
+                                        {{ message.sender.get_full_name|default:message.sender.username|slice:":1"|upper }}
+                                    </div>
+                                    <div>
+                                        <strong class="text-success">{{ message.sender.get_full_name|default:message.sender.username }}</strong>
+                                        <small class="text-muted d-block" style="font-size: 0.75rem;">پشتیبانی</small>
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    <i class="far fa-clock"></i> 
+                                    {{ message.created_at|date:"Y/m/d" }} 
+                                    {{ message.created_at|date:"H:i" }}
+                                </small>
+                            </div>
+                            <div class="card-body py-2">
+                                <p class="mb-0 text-dark">{{ message.content|linebreaksbr }}</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                <!-- پیام کاربر (راست چین) -->
+                {% else %}
+                    <div class="d-flex justify-content-start">
+                        <div class="card border-primary shadow-sm" style="max-width: 75%;">
+                            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle bg-primary text-white ms-2">
+                                        {{ message.sender.get_full_name|default:message.sender.username|slice:":1"|upper }}
+                                    </div>
+                                    <div>
+                                        <strong>{{ message.sender.get_full_name|default:message.sender.username }}</strong>
+                                        <small class="text-muted d-block" style="font-size: 0.75rem;">کاربر</small>
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    <i class="far fa-clock"></i> 
+                                    {{ message.created_at|date:"Y/m/d" }} 
+                                    {{ message.created_at|date:"H:i" }}
+                                </small>
+                            </div>
+                            <div class="card-body py-2">
+                                <p class="mb-0">{{ message.content|linebreaksbr }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}

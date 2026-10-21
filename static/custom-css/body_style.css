@@ -1,0 +1,167 @@
+/* جلوگیری از اسکرول کلی صفحه */
+body,
+html {
+    padding-top: 20px;
+    /* ارتفاع navbar + کمی فاصله */
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ظرف اصلی که سایدبار و محتوا را نگه می‌دارد */
+.main-wrapper {
+    /* ارتفاع کل صفحه منهای ارتفاع نوبار */
+    height: calc(100vh - 56px);
+    display: flex;
+}
+
+/* تنظیمات سایدبار */
+.sidebar-container {
+    width: 260px;
+    /* عرض ثابت سایدبار */
+    height: 100%;
+    /* پر کردن ارتفاع wrapper */
+    overflow-y: auto;
+    /* اگر محتوا زیاد بود اسکرول بخورد */
+    background-color: #f8f9fa;
+    border-left: 1px solid #dee2e6;
+}
+
+/* تنظیمات محتوای اصلی */
+.content-container {
+    height: 100%;
+    /* پر کردن ارتفاع wrapper */
+    overflow-y: auto;
+    /* اگر محتوا زیاد بود اسکرول بخورد */
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+/* زیبا سازی اسکرول‌بار (اختیاری) */
+.sidebar-container::-webkit-scrollbar,
+.content-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb,
+.content-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+
+
+
+
+/* کانتینر اصلی که پیام‌ها را نگه می‌دارد */
+.floating-messages-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    /* پایین سمت چپ */
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 350px;
+}
+
+/* استایل هر پیام */
+.floating-alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: rgb(213, 255, 212);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-right: 4px solid;
+    animation: slideInLeft 0.4s ease-out;
+    transition: all 0.3s ease;
+}
+
+/* رنگ‌بندی بر اساس نوع پیام */
+.floating-alert.alert-success {
+    border-right-color: #198754;
+}
+
+.floating-alert.alert-error {
+    border-right-color: #dc3545;
+}
+
+.floating-alert.alert-warning {
+    border-right-color: #ffc107;
+}
+
+.floating-alert.alert-info {
+    border-right-color: #0dcaf0;
+}
+
+/* آیکون پیام */
+.floating-alert .alert-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.alert-success .alert-icon {
+    color: #198754;
+}
+
+.alert-error .alert-icon {
+    color: #dc3545;
+}
+
+.alert-warning .alert-icon {
+    color: #ffc107;
+}
+
+.alert-info .alert-icon {
+    color: #0dcaf0;
+}
+
+/* متن پیام */
+.floating-alert .alert-content {
+    flex-grow: 1;
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.4;
+}
+
+/* دکمه بستن */
+.floating-alert .alert-close {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.floating-alert .alert-close:hover {
+    color: #333;
+}
+
+/* انیمیشن ورود از چپ */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* انیمیشن خروج */
+.floating-alert.removing {
+    animation: slideOutLeft 0.3s ease-in forwards;
+}
+
+@keyframes slideOutLeft {
+    to {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+}

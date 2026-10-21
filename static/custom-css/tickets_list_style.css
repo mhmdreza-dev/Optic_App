@@ -1,0 +1,478 @@
+/* =====================================================
+   TABLE - استایل کلی جدول تیکت
+   ===================================================== */
+
+.custom-ticket-table {
+    border: 1px solid #eee;
+    /* کادر دور جدول */
+    border-radius: 1px;
+    overflow: hidden;
+    /* جلوگیری از بیرون زدن محتوا */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    /* سایه ملایم */
+}
+
+
+/* =====================================================
+   TABLE HEADER FILTERS
+   فیلترهای داخل header جدول
+   ===================================================== */
+
+.th-filter-box {
+    display: flex;
+    flex-direction: column;
+    /* عنوان + فیلتر زیر آن */
+    gap: 5px;
+}
+
+.th-filter-box span {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 14px;
+    white-space: nowrap;
+}
+
+
+/* استایل select داخل header */
+
+.th-filter-box select.column-filter {
+    direction: rtl;
+    background-position: left 0.25rem center;
+    background-size: 10px 8px;
+    padding-left: 1.2rem;
+    padding-right: 0.25rem;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.th-filter-box .column-filter {
+    height: 25px;
+    min-height: 25px;
+    padding: 4px 4px;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+
+/* =====================================================
+   TABLE HEADER
+   استایل سرستون های جدول
+   ===================================================== */
+
+#ticketTable thead th {
+    padding: 10px 5px;
+    vertical-align: middle;
+}
+
+.custom-ticket-table thead th {
+    position: sticky;
+    /* header هنگام اسکرول ثابت بماند */
+    font-weight: 600;
+    color: #555;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #eee;
+    padding: 10px;
+}
+
+
+/* =====================================================
+   TABLE BODY
+   استایل سلول های جدول
+   ===================================================== */
+
+.custom-ticket-table tbody td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+
+/* جلوگیری از شکستن متن در سلول ها */
+
+#ticketTable {
+    width: 100%;
+    table-layout: fixed;
+    position: sticky;
+}
+
+#ticketTable th,
+#ticketTable td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* ... برای متن بلند */
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+
+/* =====================================================
+   TABLE COLUMN WIDTH
+   تعیین عرض هر ستون
+   ===================================================== */
+
+#ticketTable th:nth-child(1),
+#ticketTable td:nth-child(1) {
+    width: 6%;
+}
+
+#ticketTable th:nth-child(2),
+#ticketTable td:nth-child(2) {
+    width: 25%;
+}
+
+#ticketTable th:nth-child(3),
+#ticketTable td:nth-child(3) {
+    width: 11%;
+}
+
+#ticketTable th:nth-child(4),
+#ticketTable td:nth-child(4) {
+    width: 14%;
+}
+
+#ticketTable th:nth-child(5),
+#ticketTable td:nth-child(5) {
+    width: 15%;
+}
+
+#ticketTable th:nth-child(6),
+#ticketTable td:nth-child(6) {
+    width: 15%;
+}
+
+#ticketTable th:nth-child(7),
+#ticketTable td:nth-child(7) {
+    width: 20%;
+}
+
+
+/* =====================================================
+   BADGES
+   نشان های وضعیت یا اولویت
+   ===================================================== */
+
+.badge {
+    padding: 8px 12px;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.ticket-badge-uniform {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 0.5em 0.8em;
+}
+
+
+/* رنگ های سفارشی badge */
+
+.bg-danger-light {
+    background-color: #ffebee;
+}
+
+.bg-warning-light {
+    background-color: #fff3e0;
+}
+
+.bg-info-light {
+    background-color: #e3f2fd;
+}
+
+.text-warning-dark {
+    color: #e65100;
+}
+
+.text-info-dark {
+    color: #0d47a1;
+}
+
+
+/* =====================================================
+   STATUS DOT
+   نقطه کوچک برای نمایش وضعیت
+   ===================================================== */
+
+.status-dot {
+    height: 8px;
+    width: 8px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+
+
+/* =====================================================
+   ATTACHMENTS BOX
+   باکس نمایش فایل های ضمیمه
+   ===================================================== */
+
+.attachments-box {
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    background: white;
+    margin-bottom: 5px;
+    box-shadow: 0 0 0 1px rgba(13, 110, 253, 0.05), 0 4px 20px rgba(13, 110, 253, 0.1);
+}
+
+.attachments-box:hover {
+    box-shadow: 0 0 0 1px rgba(13, 110, 253, 0.1), 0 6px 30px rgba(13, 110, 253, 0.15);
+}
+
+
+/* حذف استایل پیش فرض accordion داخل باکس */
+
+.attachments-box .accordion-item {
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.attachments-box .accordion-button {
+    border-radius: 0 !important;
+}
+
+
+/* =====================================================
+   ATTACHMENT CARD
+   کارت هر فایل ضمیمه
+   ===================================================== */
+
+.attachment-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #f1f1f1;
+    transition: background .2s;
+}
+
+.attachment-card:hover {
+    background: #f8f9fa;
+}
+
+
+/* preview تصویر یا آیکون */
+
+.attachment-preview {
+    width: 32px;
+    height: 32px;
+}
+
+.attachment-img {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+
+.attachment-icon {
+    font-size: 22px;
+}
+
+
+/* اطلاعات فایل */
+
+.attachment-info {
+    flex: 1;
+}
+
+.attachment-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.attachment-meta {
+    font-size: 12px;
+    color: #888;
+}
+
+
+/* دکمه دانلود */
+
+.attachment-actions .btn {
+    padding: 3px 8px;
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   FILE TYPE COLORS
+   رنگ آیکون فایل ها
+   ===================================================== */
+
+.attachment-image {
+    background-color: #6c757d;
+}
+
+
+/* عکس */
+
+.attachment-pdf {
+    color: #fd7e14;
+}
+
+
+/* PDF */
+
+.attachment-excel {
+    color: #198754;
+}
+
+
+/* Excel */
+
+.attachment-word {
+    background-color: #0d6efd;
+}
+
+
+/* Word */
+
+
+/* =====================================================
+   ACCORDION CUSTOMIZATION
+   تغییر رفتار accordion بوت استرپ
+   ===================================================== */
+
+.accordion-button {
+    flex-direction: row-reverse;
+}
+
+.accordion-button::after {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    order: -1;
+}
+
+.accordion-button:not(.collapsed)::after {
+    transform: rotate(180deg);
+}
+
+.accordion-button:focus {
+    box-shadow: none !important;
+}
+
+
+/* =====================================================
+   USER INFO BOX
+   اطلاعات کاربر ثبت کننده تیکت
+   ===================================================== */
+
+.ticket-user-box {
+    font-size: 0.75rem;
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+
+.ticket-user-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.ticket-user-label {
+    font-weight: 600;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.ticket-user-info {
+    color: #444;
+    font-size: 14px;
+}
+
+.contact-btn {
+    font-size: 0.75rem;
+    margin-right: auto;
+}
+
+
+/* =====================================================
+   AVATAR
+   آواتار دایره ای کاربر
+   ===================================================== */
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+
+/* =====================================================
+   TICKET MESSAGES
+   انیمیشن نمایش پیام ها
+   ===================================================== */
+
+.ticket-messages-container {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+}
+
+.message-wrapper {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* کارت ها */
+
+.card {
+    transition: transform 0.2s;
+}
+
+
+/* =====================================================
+      استایل صفحه بندی
+   ===================================================== */
+
+.custom-pagination {
+    direction: ltr;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.custom-pagination .page-link {
+    border: none;
+    margin: 0 3px;
+    border-radius: 5px;
+    background: #c4c4c4;
+    color: #495057;
+    transition: .2s ease;
+    min-width: 40px;
+    text-align: center;
+}
+
+.custom-pagination .page-link:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.custom-pagination .page-item.active .page-link {
+    background: #0d6efd;
+    color: white;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, .25);
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    background: transparent;
+    color: #adb5bd;
+}

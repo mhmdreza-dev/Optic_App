@@ -1,0 +1,24 @@
+# virtual environment
+.venv/
+
+# python cache
+__pycache__/
+*.pyc
+
+# database (در پروژه‌های ساده)
+db.sqlite3
+
+# environment variables
+.env
+
+# vscode / ide
+.vscode/
+.idea/
+
+# mac / linux junk
+.DS_Store
+
+# logs
+*.log
+# Files
+media/

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+  {% load static %}
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{% static 'custom-css/navbar_style.css' %}" />
+  <link rel="stylesheet" href="{% static 'custom-css/body_style.css' %}" />
+  <link rel="stylesheet" href="{% static 'custom-css/sidebar_style.css' %}" />
+  <link rel="stylesheet" href="{% static 'custom-css/tickets_list_style.css' %}" />
+
+  <title>{% block title %}{% endblock title %}</title>
+</head>
+
+<body>
+  
+<!-- Navbar همیشه بالا قرار می‌گیرد -->
+{% include "navbar.html" %}
+
+<div class="main-wrapper d-flex flex-column min-vh-100">
+
+  {% include "sidebar.html" %}
+
+  <!-- محتوای اصلی -->
+  <main class="content-container px-0 flex-grow-1">
+
+    {% block content %}{% endblock content %}
+
+    {% include "message.html" %}
+
+  </main>
+
+
+  {% if user.is_authenticated %}
+  {% include "includes/modals/new_ticket_modal.html" %}
+  {% include "includes/modals/send_file_modal.html" %}
+  {% include "tickets/ticket_details.html" %}
+  {% endif %}
+    
+</div>
+  
+  <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'custom-js/custom-javascripts.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,192 @@
+<!-- کانتینر پیام‌های شناور -->
+<div class="floating-messages-container">
+    <!-- پیام‌های سرور (messages framework) -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="floating-alert alert-{{ message.tags }}">
+                <div class="alert-icon">
+                    {% if message.tags == 'success' %}
+                        <i class="bi bi-check-circle-fill"></i>
+                    {% elif message.tags == 'error' or message.tags == 'danger' %}
+                        <i class="bi bi-x-circle-fill"></i>
+                    {% elif message.tags == 'warning' %}
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    {% else %}
+                        <i class="bi bi-info-circle-fill"></i>
+                    {% endif %}
+                </div>
+                <div class="alert-content">
+                    {{ message }}
+                </div>
+                <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<!-- استایل CSS -->
+<style>
+    .floating-messages-container {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 350px;
+        pointer-events: none;
+    }
+
+    .floating-alert {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        background: white;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        border-right: 4px solid;
+        animation: slideInLeft 0.4s ease-out;
+        transition: all 0.3s ease;
+        pointer-events: auto;
+    }
+
+    .floating-alert.alert-success { border-right-color: #198754; }
+    .floating-alert.alert-error,
+    .floating-alert.alert-danger { border-right-color: #dc3545; }
+    .floating-alert.alert-warning { border-right-color: #ffc107; }
+    .floating-alert.alert-info { border-right-color: #0dcaf0; }
+
+    .floating-alert .alert-icon {
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .alert-success .alert-icon { color: #198754; }
+    .alert-error .alert-icon,
+    .alert-danger .alert-icon { color: #dc3545; }
+    .alert-warning .alert-icon { color: #ffc107; }
+    .alert-info .alert-icon { color: #0dcaf0; }
+
+    .floating-alert .alert-content {
+        flex-grow: 1;
+        font-size: 0.9rem;
+        color: #333;
+        line-height: 1.4;
+    }
+
+    .floating-alert .alert-close {
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 0;
+        transition: color 0.2s;
+    }
+
+    .floating-alert .alert-close:hover {
+        color: #333;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .floating-alert.removing {
+        animation: slideOutLeft 0.3s ease-in forwards;
+    }
+
+    @keyframes slideOutLeft {
+        to {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+    }
+</style>
+
+<!-- تابع JavaScript برای نمایش پیام‌های داینامیک -->
+<script>
+    // تابع showToast برای نمایش پیام‌های JavaScript
+    function showToast(message, type = 'warning') {
+        const container = document.querySelector('.floating-messages-container');
+        
+        if (!container) {
+            console.warn('Toast container not found!');
+            alert(message);
+            return;
+        }
+
+        // تبدیل 'danger' به 'error' برای هماهنگی با CSS
+        if (type === 'danger') type = 'error';
+
+        // تعیین آیکون بر اساس نوع پیام
+        let icon = 'info-circle-fill';
+        if (type === 'success') icon = 'check-circle-fill';
+        else if (type === 'error') icon = 'x-circle-fill';
+        else if (type === 'warning') icon = 'exclamation-triangle-fill';
+
+        // ایجاد المان پیام
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `floating-alert alert-${type}`;
+        alertDiv.innerHTML = `
+            <div class="alert-icon">
+                <i class="bi bi-${icon}"></i>
+            </div>
+            <div class="alert-content">
+                ${message}
+            </div>
+            <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                <i class="bi bi-x"></i>
+            </button>
+        `;
+
+        container.appendChild(alertDiv);
+
+        // تعیین زمان بسته شدن خودکار بر اساس نوع پیام
+        const timeout = (type === 'success') ? 4000 : (type === 'error') ? 6000 : 5000;
+
+        // حذف خودکار بعد از زمان مشخص
+        setTimeout(function() {
+            alertDiv.classList.add('removing');
+            setTimeout(function() {
+                alertDiv.remove();
+            }, 300);
+        }, timeout);
+    }
+
+    // حذف خودکار پیام‌های سرور بعد از لود صفحه
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.floating-alert');
+        
+        alerts.forEach(function(alert) {
+            if (alert.classList.contains('alert-success')) {
+                setTimeout(function() {
+                    alert.classList.add('removing');
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 300);
+                }, 4000);
+            }
+            
+            if (alert.classList.contains('alert-error') || alert.classList.contains('alert-danger')) {
+                setTimeout(function() {
+                    alert.classList.add('removing');
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 300);
+                }, 6000);
+            }
+        });
+    });
+</script>

@@ -1,0 +1,258 @@
+{% extends "main.html" %}
+{% load jalali_tags %}
+{% load static%}
+{% block title %}تیکت ها{% endblock title %}
+
+{% block content %}
+<div class="ticket-table-scroll px-0 ticket-table-wrapper">
+    <table class="table table-hover align-middle custom-ticket-table px-0" id="ticketTable" style=" font-size:0.80rem;">
+        <thead class="table-light custom-ticket-table">
+            <tr>
+                <th scope="col">
+                    <div class="th-filter-box">
+                        <span>شماره</span>
+                        <input type="text" class="form-control column-filter" data-column="0" placeholder="شماره">
+                    </div>
+                </th>
+
+                <th scope="col">
+                    <div class="th-filter-box">
+                        <span>عنوان تیکت</span>
+                        <input type="text" class="form-control column-filter" data-column="1" placeholder="عنوان">
+                    </div>
+                </th>
+
+                <th scope="col">
+                    <div class="th-filter-box">
+                        <span>اولویت</span>
+                        <select class="form-select column-filter" data-column="2">
+                            <option value="">همه</option>
+                            <option value="پایین">پایین</option>
+                            <option value="متوسط">متوسط</option>
+                            <option value="بالا">بالا</option>
+                            <option value="بحرانی">بحرانی</option>
+                        </select>
+                    </div>
+                </th>
+
+                <th scope="col">
+                    <div class="th-filter-box">
+                        <span>وضعیت</span>
+                        <select class="form-select column-filter status-filter" data-column="3">
+                            <option value="">همه</option>
+                            <option value="باز">باز</option>
+
+                            <option value="در حال بررسی">در حال بررسی</option>
+                            <option value="بسته">بسته</option>
+                        </select>
+                    </div>
+                </th>
+
+                <th scope="col">
+                    <div class="th-filter-box">
+                        <span>تاریخ ثبت</span>
+                        <input type="text" class="form-control column-filter" data-column="4" placeholder="فیلتر">
+                    </div>
+                </th>
+
+                <th scope="col">
+                    <div class="th-filter-box">
+                        <span>زمان سپری شده</span>
+                        <input type="text" class="form-control column-filter" data-column="5" placeholder="فیلتر">
+                    </div>
+                </th>
+
+                <th scope="col">
+                    <div class="th-filter-box">
+                        <span>واحد</span>
+                        <input type="text" class="form-control column-filter" data-column="6" placeholder="واحد">
+                    </div>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for ticket in tickets %}
+            <tr class="ticket-row" data-url="{% url 'tickets:ticket_detail_ajax' ticket.id %}">
+
+                <td class="fw-bold text-secondary">
+                    {{ ticket.ticket_number }}
+
+                </td>
+                <td>
+                    <div class="ticket-title-cell">
+                        <span class="d-block fw-semibold text-dark ticket-title-link" 
+                              data-url="{% url 'tickets:ticket_detail_ajax' ticket.id %}"
+                              style="cursor: pointer;"
+                              role="button">
+                            <img src=" {% static 'icons/ticketicon.svg' %}" width="24" height="20" title="تیکت" />
+                            {{ ticket.ticket_title }}
+                            {% if ticket.attachments.count %}
+                            <span>
+                                <img src=" {% static 'icons/attachments.svg' %}" style="transform: rotate(45deg);"
+                                    title="ضمیمه" />
+
+                            </span>
+                            {% endif %}
+                        </span>
+                        <small class="text-muted">ثبت شده توسط:
+                            {{ticket.creator.get_full_name|default:ticket.creator.first_name }}
+                            {{ticket.creator.get_full_name|default:ticket.creator.last_name }}
+                            - شعبه {{ ticket.creator.branch.branch_name }}
+
+                        </small>
+                    </div>
+                </td>
+                <!-- اولویت تیکت -->
+                <td>
+                    {% if ticket.priority == 'critical' %}
+                    <span class="badge rounded-pill bg-danger-light text-danger ticket-badge-uniform">بحرانی</span>
+                    {% elif ticket.priority == 'top' %}
+                    <span class="badge rounded-pill bg-warning-light text-warning-dark ticket-badge-uniform">بالا</span>
+                    {% elif ticket.priority == 'medium' %}
+                    <span class="badge rounded-pill bg-info-light text-info-dark ticket-badge-uniform">متوسط</span>
+                    {% elif ticket.priority == 'low' %}
+                    <span class="badge rounded-pill bg-success text-success-dark ticket-badge-uniform">پایین</span>
+                    {% endif %}
+                </td>
+
+                <!-- وضعیت تیکت -->
+                <td>
+                    {% if ticket.status == 'open' %}
+                    <span class=" status-dot bg-danger"></span> باز
+                    {% elif ticket.status == 'progress' %}
+                    <span class="status-dot bg-info"></span> در حال بررسی
+                    {% elif ticket.status == 'closed' %}
+                    <span class="status-dot bg-success"></span> بسته
+                    {% endif %}
+                </td>
+                <!-- زمان ثبت تیکت -->
+                <td class="small">{{ ticket.create_time|to_jalali:' %H:%M - %Y/%m/%d' }}
+
+                </td>
+                <!-- زمان سپری شده -->
+                <td class="small">
+                    {% if ticket.epiration_time %}
+                    {{ ticket.create_time|timesince }} پیش
+                    {% else %}
+
+                    {{ ticket.create_time|timesince:ticket.expiration_time }} پیش
+                    {% endif %}
+                </td>
+                <!-- تعداد ضمائم هر تیکت -->
+                <td>
+
+                    <span>
+
+                        {{ ticket.destination_unit }}
+                    </span>
+
+                </td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+
+
+
+
+        
+    </table>
+
+{% if tickets.paginator.num_pages > 1 %}
+<nav class="mt-4 d-flex justify-content-center">
+
+<ul class="pagination custom-pagination">
+
+    <!-- دکمه اول -->
+    {% if tickets.has_previous %}
+    <li class="page-item">
+        <a class="page-link" href="?page=1">اول</a>
+    </li>
+
+    <li class="page-item">
+        <a class="page-link" href="?page={{ tickets.previous_page_number }}">
+            < </i>
+        </a>
+    </li>
+    {% endif %}
+
+
+    <!-- صفحه اول -->
+    {% if tickets.number > 3 %}
+    <li class="page-item">
+        <a class="page-link" href="?page=1">1</a>
+    </li>
+
+    {% if tickets.number > 4 %}
+    <li class="page-item disabled">
+        <span class="page-link">...</span>
+    </li>
+    {% endif %}
+    {% endif %}
+
+
+    <!-- صفحات اطراف صفحه فعلی -->
+    {% for num in tickets.paginator.page_range %}
+
+        {% if num >= tickets.number|add:'-2' and num <= tickets.number|add:'2' %}
+
+            {% if tickets.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+
+        {% endif %}
+
+    {% endfor %}
+
+
+    <!-- صفحه آخر -->
+    {% if tickets.number < tickets.paginator.num_pages|add:'-2' %}
+
+        {% if tickets.number < tickets.paginator.num_pages|add:'-3' %}
+        <li class="page-item disabled">
+            <span class="page-link">...</span>
+        </li>
+        {% endif %}
+
+    <li class="page-item">
+        <a class="page-link" href="?page={{ tickets.paginator.num_pages }}">
+            {{ tickets.paginator.num_pages }}
+        </a>
+    </li>
+
+    {% endif %}
+
+
+    <!-- دکمه بعدی -->
+    {% if tickets.has_next %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ tickets.next_page_number }}">
+            > </i>
+        </a>
+    </li>
+
+    <li class="page-item">
+        <a class="page-link" href="?page={{ tickets.paginator.num_pages }}">
+            آخر
+        </a>
+    </li>
+    {% endif %}
+
+</ul>
+
+</nav>
+{% endif %}
+
+
+</div>
+
+
+{% include "tickets/ticket_details.html" %}
+{% endblock content %}

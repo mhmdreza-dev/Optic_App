@@ -1,0 +1,83 @@
+/* فونت سفارشی */
+@font-face {
+    font-family: "Vazir";
+    src: url("../fonts/Vazir-Regular.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Vazir";
+    src: url("../fonts/Vazir-Bold.woff2") format("woff2");
+    font-weight: bold;
+}
+
+body {
+    font-family: "Vazir", sans-serif;
+    background: linear-gradient(135deg, #f35050, #1c89c8);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* مرکز‌کننده صفحه */
+.login-wrapper {
+    width: 100%;
+    max-width: 450px;
+}
+
+/* کارت شیشه‌ای */
+.card-glass {
+    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    animation: fadeIn .8s ease;
+}
+
+/* افکت انیمیشن */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* اینپوت‌ها */
+.form-control {
+    border-radius: 12px;
+    padding-right: 42px;
+}
+
+/* آیکون داخل اینپوت */
+.input-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #666;
+}
+
+/* آیکون چشم */
+.eye-btn {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    font-size: 18px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+}
+
+/* دکمه */
+.btn-login {
+    border-radius: 12px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+/* ریسپانسیو */
+@media (max-width: 480px) {
+    .card-glass {
+        padding: 25px;
+    }
+}

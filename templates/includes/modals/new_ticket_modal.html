@@ -1,0 +1,57 @@
+
+<!-- new ticket modal-->
+<div class="modal fade" id="new_ticket_modal" tabindex="-1" aria-labelledby="new_ticket_modal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+              <form method="post" action="{% url 'tickets:new_ticket' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h6 class="modal-title">ثبت تیکت جدید</h6>
+
+                </div>
+
+                <div class="modal-body">
+                    <!-- عنوان تیکت -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">عنوان تیکت</label>
+                        {{ ticket_form.ticket_title }}
+                    </div>
+
+                    <!-- واحد و اولویت در یک ردیف -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">واحد مقصد</label>
+                            {{ ticket_form.destination_unit }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">اولویت</label>
+                            {{ ticket_form.priority }}
+                        </div>
+                    </div>
+
+                    <!-- شرح -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">شرح تیکت</label>
+                        {{ ticket_form.description }}
+                    </div>
+
+                    <!-- ضمیمه -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">فایل ضمیمه</label>
+                        <input type="file" name="files" class="form-control" multiple>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                    <button type="submit" class="btn btn-success px-4">ارسال تیکت</button>
+                </div>
+            </form>
+
+        </div>
+      </div>
+</div>

@@ -1,0 +1,49 @@
+/* جلوگیری از اسکرول کلی صفحه */
+body,
+html {
+    padding-top: 20px;
+    /* ارتفاع navbar + کمی فاصله */
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ظرف اصلی که سایدبار و محتوا را نگه می‌دارد */
+.main-wrapper {
+    /* ارتفاع کل صفحه منهای ارتفاع نوبار */
+    height: calc(100vh - 56px);
+    display: flex;
+}
+
+/* تنظیمات سایدبار */
+.sidebar-container {
+    width: 260px;
+    /* عرض ثابت سایدبار */
+    height: 100%;
+    /* پر کردن ارتفاع wrapper */
+    overflow-y: auto;
+    /* اگر محتوا زیاد بود اسکرول بخورد */
+    background-color: #f8f9fa;
+    border-left: 1px solid #dee2e6;
+}
+
+/* تنظیمات محتوای اصلی */
+.content-container {
+    height: 100%;
+    /* پر کردن ارتفاع wrapper */
+    overflow-y: auto;
+    /* اگر محتوا زیاد بود اسکرول بخورد */
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+/* زیبا سازی اسکرول‌بار (اختیاری) */
+.sidebar-container::-webkit-scrollbar,
+.content-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb,
+.content-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
