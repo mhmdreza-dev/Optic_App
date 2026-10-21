@@ -1,0 +1,146 @@
+{% extends "main.html" %}
+{% load jalali_tags %}
+{% load static%}
+{% block title %} آموزش فروشندگان{% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4" dir="rtl">
+
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+    <div>
+      <h5 class="fw-bold mb-1">مرکز آموزش</h5>
+      <div class="text-muted small">ویدیوهای راهنمای استفاده از سامانه</div>
+    </div>
+    <div class="text-muted small">
+      {% if current_video %}
+        در حال پخش: <span class="fw-bold text-dark">{{ current_video.title }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <hr class="my-3 text-muted opacity-25">
+
+  <div class="row g-4">
+
+    <!-- Player -->
+    <div class="col-lg-8">
+      {% if current_video %}
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="ratio ratio-16x9 bg-dark">
+            {% if current_video.video_file %}
+              <video controls class="w-100 h-100" preload="metadata">
+                <source src="{{ current_video.video_file.url }}" type="video/mp4">
+                مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
+              </video>
+            {% else %}
+              <div class="d-flex align-items-center justify-content-center text-white">
+                فایل ویدیو برای این آموزش ثبت نشده است.
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="badge text-bg-primary">{{ current_video.category.title }}</span>
+              <span class="badge text-bg-light border text-secondary">شناسه: {{ current_video.id }}</span>
+            </div>
+
+            <h4 class="fw-bold mb-3">{{ current_video.title }}</h4>
+
+            {% if current_video.description %}
+              <div class="p-3 bg-light rounded-3 text-secondary" style="font-size:0.9rem; line-height:1.9;">
+                {{ current_video.description|linebreaksbr }}
+              </div>
+            {% else %}
+              <div class="text-muted small">توضیحی برای این ویدیو ثبت نشده است.</div>
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <div class="alert alert-warning border-0 rounded-4 shadow-sm p-4">
+          هنوز هیچ ویدیوی فعالی ثبت نشده است.
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0 pt-3 px-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <h6 class="fw-bold mb-0">فهرست آموزش‌ها</h6>
+            <span class="text-muted small">{{ categories|length }} دسته</span>
+          </div>
+        </div>
+
+        <div class="card-body p-2" style="max-height: 75vh; overflow:auto;">
+          <div class="accordion accordion-flush" id="eduAccordion">
+
+            {% for cat in categories %}
+              <div class="accordion-item border-0 mb-2">
+                <h2 class="accordion-header" id="heading{{ cat.id }}">
+                  <button
+                    class="accordion-button bg-light rounded-3 px-3 py-2 fw-bold text-secondary {% if current_video and current_video.category_id != cat.id %}collapsed{% endif %}"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{ cat.id }}"
+                    aria-expanded="{% if current_video and current_video.category_id == cat.id %}true{% else %}false{% endif %}"
+                    aria-controls="collapse{{ cat.id }}"
+                  >
+                    {{ cat.title }}
+                  </button>
+                </h2>
+
+                <div
+                  id="collapse{{ cat.id }}"
+                  class="accordion-collapse collapse {% if current_video and current_video.category_id == cat.id %}show{% endif %}"
+                  aria-labelledby="heading{{ cat.id }}"
+                  data-bs-parent="#eduAccordion"
+                >
+                  <div class="accordion-body p-2">
+                    {% if cat.description %}
+                      <div class="text-muted small mb-2 px-1" style="line-height:1.7;">
+                        {{ cat.description }}
+                      </div>
+                    {% endif %}
+
+                    <div class="list-group list-group-flush">
+                      {% for vid in cat.videos.all %}
+                        <a
+                          href="{% url 'education:video_detail' vid.id %}"
+                          class="list-group-item list-group-item-action d-flex align-items-center justify-content-between border-0 rounded-3 my-1 py-2 px-3
+                                 {% if current_video and current_video.id == vid.id %}active bg-primary text-white{% endif %}"
+                        >
+                          <div class="d-flex align-items-center gap-2 text-truncate">
+                            <span class="fw-bold">{% if current_video and current_video.id == vid.id %}⏵{% else %}▶{% endif %}</span>
+                            <span class="text-truncate" style="font-size:0.88rem;">{{ vid.title }}</span>
+                          </div>
+                          <small class="{% if current_video and current_video.id == vid.id %}text-white-50{% else %}text-muted{% endif %}">
+                            #{{ vid.id }}
+                          </small>
+                        </a>
+                      {% empty %}
+                        <div class="text-muted small px-2 py-3">
+                          ویدیویی برای این دسته ثبت نشده است.
+                        </div>
+                      {% endfor %}
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            {% empty %}
+              <div class="text-muted small p-3">
+                هنوز دسته‌بندی فعالی ثبت نشده است.
+              </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}
+
