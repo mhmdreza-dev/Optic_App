@@ -106,6 +106,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'tickets.context_processors.global_ticket_form',
+                'tickets.context_processors.ticket_stats_processor',
             ],
         },
     },

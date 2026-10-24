@@ -13,7 +13,8 @@ urlpatterns = [
     path('tickets/<int:id>/add_ticket_message/', views.add_ticket_message, name='add_ticket_message'),
     path('tickets/<int:id>/close/',views.close_ticket , name = 'close_ticket'),
     path ('tickets/new_ticket',views.new_ticket ,name = 'new_ticket'),
-
+    path ('tickets/<int:ticket_id>/reassign_ticket/<int:colleagues_id>',views.reassign_ticket ,name = 'reassign_ticket'),
+    path ('referenced_tickets_list/',views.referenced_ticket ,name= 'referenced_ticket'),
 
 ]
 

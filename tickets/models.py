@@ -94,6 +94,14 @@ class Ticket (models.Model):
         verbose_name='وضعیت'
     )
 
+    reference_to = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="reference_to",
+        verbose_name='ارجاع به'
+        )
 # -----------------------------
 # مدل فایل ضمیمه (TicketAttachment)
 # -----------------------------
@@ -149,3 +157,8 @@ class TicketMessage(models.Model):
     )
     def __str__(self):
         return f"پیام {self.id} در تیکت {self.ticket.id}"
+
+    
+
+
+        

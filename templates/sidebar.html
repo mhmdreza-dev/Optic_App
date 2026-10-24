@@ -61,8 +61,11 @@
         </div>
         <div class="submenu-item">
             <a class="submenu-item" href="{% url 'tickets:ticket_list' %}">فهرست تیکت ها</a>
-            <small class="badge-clean bg-danger">5</small>
-
+            {% if opened_tickets_count > 0 %}
+            <small class="badge-clean bg-danger">{{ opened_tickets_count }}</small>
+            {% endif %}
+        </div>
+        <div class="submenu-item"><a class="submenu-item" href="{% url 'tickets:referenced_ticket' %}">ارجاع شده</a>
         </div>
         <div class="submenu-item"><a class="submenu-item" href="{% url 'tickets:ticket_closed_list' %}">بسته شده</a>
         </div>

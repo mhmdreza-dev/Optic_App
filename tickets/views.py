@@ -8,8 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 from .models import Ticket
+from accounts.models import User
 from .forms import TicketMessageForm
-
+from django.http import JsonResponse
 from .forms import NewTicketForm ,TicketMessageForm
 from .models import TicketAttachment ,Ticket 
 from django.db.models import Max
@@ -24,6 +25,7 @@ def tickets(request):
 
         tickets = Ticket.objects.filter(
             destination_unit=request.user.unit).exclude(status='closed').prefetch_related("attachments", "messages").order_by('-id')
+
     
         paginator = Paginator(tickets, 15)  # هر صفحه 7 تیکت
 
@@ -45,7 +47,8 @@ def tickets(request):
         page_obj = paginator.get_page(page_number)
 
         context = {
-            'tickets': page_obj
+            'tickets': page_obj ,
+
         }
 
 
@@ -74,11 +77,17 @@ def ticket_detail_ajax(request, pk):
         Ticket.objects.select_related("creator"),
         pk=pk
     )
-
+    colleagues = User.objects.filter(
+                                    unit=request.user.unit,
+                                    is_staff=True,
+                                    is_active=True
+                                    ).exclude(id=request.user.id)
     return render(
         request,
         "tickets/ticket_detail_content.html",
-        {"ticket": ticket}
+        {"ticket": ticket ,
+         'unit_colleagues': colleagues
+        }
     )
 
 #تابع برداشتن تیکت
@@ -175,3 +184,52 @@ def new_ticket (request):
     
         # فحه‌ای که مودال توش قرار داره رو رندر کن (مثلاً ticket_list.html)
         return render(request, 'tickets/ticket_list.html', {'ticket_form': form})
+
+
+# تابع ارجاع تیکت جدید
+def reassign_ticket(request , ticket_id ,colleagues_id):
+
+    ticket = get_object_or_404(Ticket, id = ticket_id)
+    ticket.reference_to = User.objects.get(id=colleagues_id)
+    ticket.save()
+    messages.success(request, "پیام شما با موفقیت ارجاع شد.")
+    return redirect('tickets:ticket_list')
+
+
+# تابع نمایش تیک های ارجاع شده 
+def referenced_ticket (request):
+
+
+    #اگر کاربر پشتیبان بود
+    if request.user.is_staff:
+
+        tickets = Ticket.objects.filter(
+            destination_unit=request.user.unit , reference_to = request.user.id).exclude(status='closed').prefetch_related("attachments", "messages").order_by('-id')
+
+    
+        paginator = Paginator(tickets, 15)  # هر صفحه 7 تیکت
+
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            'tickets': page_obj
+        }
+    #اگر کاربر پشتیبان نبود
+    if not request.user.is_staff:
+
+        tickets = Ticket.objects.filter(
+            reference_to = request.user).exclude(status='closed').prefetch_related("attachments", "messages").order_by('-id')
+
+        paginator = Paginator(tickets, 7)  # هر صفحه 7 تیکت
+
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            'tickets': page_obj ,
+
+        }
+
+
+    return render(request, 'tickets/referenced_tickets_list.html', context)

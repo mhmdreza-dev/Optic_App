@@ -85,12 +85,19 @@
                               data-url="{% url 'tickets:ticket_detail_ajax' ticket.id %}"
                               style="cursor: pointer;"
                               role="button">
-                            <img src=" {% static 'icons/ticketicon.svg' %}" width="24" height="20" title="تیکت" />
+                            <img src=" {% static 'icons/ticket.svg' %}" width="24" height="20" title="تیکت" />
                             {{ ticket.ticket_title }}
                             {% if ticket.attachments.count %}
                             <span>
                                 <img src=" {% static 'icons/attachments.svg' %}" style="transform: rotate(45deg);"
                                     title="ضمیمه" />
+
+                            </span>
+                            {% endif %}
+                            {% if ticket.reference_to %}
+                            <span>
+                                <img src=" {% static 'icons/reference.svg' %}" 
+                                    title="ارجاع" />
 
                             </span>
                             {% endif %}
