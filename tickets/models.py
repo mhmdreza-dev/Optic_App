@@ -15,7 +15,7 @@ class Ticket (models.Model):
     STATUS_CHOICES = (
         ("open", "باز"),
         ("progress", "در حال بررسی"),
-        ("close", "بسته"),
+        ("closed", "بسته"),
     )
     PRIORITY_CHOICES = (
         ('low','کم'),

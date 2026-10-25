@@ -58,7 +58,7 @@ def tickets(request):
 def show_closed_tickets(request):
 
         
-    tickets = Ticket.objects.filter(status='closed',creator = request.user).prefetch_related("attachments", "messages").order_by('-id')
+    tickets = Ticket.objects.filter(status='closed',destination_unit = request.user.unit).prefetch_related("attachments", "messages").order_by('-id')
 
     paginator = Paginator(tickets, 7)  # هر صفحه 7 تیکت
 

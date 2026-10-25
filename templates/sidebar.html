@@ -66,6 +66,9 @@
             {% endif %}
         </div>
         <div class="submenu-item"><a class="submenu-item" href="{% url 'tickets:referenced_ticket' %}">ارجاع شده</a>
+            {% if referenced_tickets_count > 0 %}
+            <small class="badge-clean bg-danger">{{ referenced_tickets_count }}</small>
+            {% endif %}
         </div>
         <div class="submenu-item"><a class="submenu-item" href="{% url 'tickets:ticket_closed_list' %}">بسته شده</a>
         </div>

@@ -84,6 +84,12 @@
 
         {% endif %}
 
+        {% if ticket.status == "closed" %}
+            <button type="button" class="btn btn-secondary btn-sm fw-medium px-3 rounded-2 shadow-sm " disabled >
+            بسته شده
+            </button>
+
+        {% endif %}
     </div>
 
 </h5>
