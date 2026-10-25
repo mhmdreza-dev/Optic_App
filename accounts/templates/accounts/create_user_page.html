@@ -1,0 +1,121 @@
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                
+                <!-- هدر فرم -->
+                <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1">ثبت‌نام کاربر جدید</h4>
+                        <p class="text-muted small mb-0">اطلاعات کاربری را با دقت وارد کنید.</p>
+                    </div>
+                    <div class="bg-light p-3 rounded-circle text-primary">
+                        <i class="bi bi-person-plus fs-4"></i>
+                    </div>
+                </div>
+
+                <!-- فرم ثبت نام -->
+                <form method="POST" action="" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        
+                        <!-- نام کاربری -->
+                        <div class="col-md-6">
+                            <label for="username" class="form-label small fw-bold text-secondary">نام کاربری <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light text-muted border-end-0 rounded-start-2"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 rounded-end-2" id="username" name="username" placeholder="نام کاربری را وارد کنید" required>
+                            </div>
+                        </div>
+
+                        <!-- نام -->
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label small fw-bold text-secondary">نام <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light text-muted border-end-0 rounded-start-2"><i class="bi bi-card-text"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 rounded-end-2" id="first_name" name="first_name" placeholder="نام" required>
+                            </div>
+                        </div>
+
+                        <!-- نام خانوادگی -->
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label small fw-bold text-secondary">نام خانوادگی <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light text-muted border-end-0 rounded-start-2"><i class="bi bi-card-text"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 rounded-end-2" id="last_name" name="last_name" placeholder="نام خانوادگی" required>
+                            </div>
+                        </div>
+
+                        <!-- شماره موبایل -->
+                        <div class="col-md-6">
+                            <label for="mobile" class="form-label small fw-bold text-secondary">شماره موبایل <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light text-muted border-end-0 rounded-start-2"><i class="bi bi-phone"></i></span>
+                                <input type="tel" class="form-control border-start-0 ps-0 rounded-end-2 text-end" dir="ltr" id="mobile" name="mobile" placeholder="۰۹۱۲۱۲۳۴۵۶۷" required>
+                            </div>
+                        </div>
+
+                        <!-- تلفن ثابت -->
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label small fw-bold text-secondary">تلفن ثابت</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light text-muted border-end-0 rounded-start-2"><i class="bi bi-telephone"></i></span>
+                                <input type="tel" class="form-control border-start-0 ps-0 rounded-end-2 text-end" dir="ltr" id="phone" name="phone" placeholder="۰۲۱۱۲۳۴۵۶۷۸">
+                            </div>
+                        </div>
+
+                        <!-- داخلی -->
+                        <div class="col-md-6">
+                            <label for="extension" class="form-label small fw-bold text-secondary">داخلی</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light text-muted border-end-0 rounded-start-2"><i class="bi bi-building"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 rounded-end-2 text-end" dir="ltr" id="extension" name="extension" placeholder="۱۲۳">
+                            </div>
+                        </div>
+
+                        <!-- ایمیل -->
+                        <div class="col-md-6">
+                            <label for="email" class="form-label small fw-bold text-secondary">ایمیل</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light text-muted border-end-0 rounded-start-2"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control border-start-0 ps-0 rounded-end-2 text-end" dir="ltr" id="email" name="email" placeholder="example@email.com">
+                            </div>
+                        </div>
+
+                        <!-- سمت -->
+                        <div class="col-md-6">
+                            <label for="position" class="form-label small fw-bold text-secondary">سمت</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light text-muted border-end-0 rounded-start-2"><i class="bi bi-briefcase"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 rounded-end-2" id="position" name="position" placeholder="سمت سازمانی">
+                            </div>
+                        </div>
+
+                        <!-- تاریخ تولد (شمسی) -->
+                        <div class="col-12">
+                            <label for="birth_date" class="form-label small fw-bold text-secondary">تاریخ تولد</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light text-muted border-end-0 rounded-start-2"><i class="bi bi-calendar-date"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 rounded-end-2 text-end" dir="ltr" id="birth_date" name="birth_date" placeholder="۱۴۰۰/۰۱/۰۱">
+                            </div>
+                            <div class="form-text text-muted" style="font-size: 0.75rem;">فرمت پیشنهادی: سال/ماه/روز (مثلاً ۱۴۰۲/۰۵/۱۲)</div>
+                        </div>
+
+                    </div>
+
+                    <!-- دکمه‌های عملیاتی -->
+                    <div class="d-flex align-items-center justify-content-between mt-4 pt-3 border-top">
+                        <span class="text-muted" style="font-size: 0.8rem;"><span class="text-danger">*</span> فیلدهای ستاره‌دار الزامی هستند.</span>
+                        <div class="d-flex gap-2">
+                            <a href="#" class="btn btn-outline-secondary btn-sm px-4 rounded-2">انصراف</a>
+                            <button type="submit" class="btn btn-success btn-sm px-4 rounded-2 shadow-sm">ثبت‌نام</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

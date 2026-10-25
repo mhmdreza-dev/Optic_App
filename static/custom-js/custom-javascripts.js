@@ -239,7 +239,6 @@ document.addEventListener("click", function(event) {
 /* ═══════════════════════════════════════════════════════════════
    🔍 فیلتر جدول
 ═══════════════════════════════════════════════════════════════ */
-
 function initializeTableFilter() {
     const table = document.getElementById("ticketTable");
     if (!table) return;
@@ -268,8 +267,22 @@ function filterTicketTable() {
             if (!value) return;
 
             const cell = row.children[index];
-            if (cell && !cell.textContent.toLowerCase().includes(value)) {
-                show = false;
+            if (!cell) return;
+
+            // اگر فیلتر ستون ۱ (عنوان تیکت) بود، هم متن سلول و هم محتوای مخفی را بررسی کن
+            if (index === "1") {
+                const cellText = cell.textContent.toLowerCase();
+                const ticketBody = (row.dataset.content || "").toLowerCase();
+
+                // اگر نه در عنوان بود و نه در محتوا، سطر مخفی شود
+                if (!cellText.includes(value) && !ticketBody.includes(value)) {
+                    show = false;
+                }
+            } else {
+                // رفتار عادی برای بقیه ستون‌ها (شماره، اولویت، وضعیت، واحد و...)
+                if (!cell.textContent.toLowerCase().includes(value)) {
+                    show = false;
+                }
             }
         });
 

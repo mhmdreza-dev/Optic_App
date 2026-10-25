@@ -21,8 +21,9 @@
     <div class="login-wrapper">
       <div class="card-glass">
         <div class="text-center mb-4">
-          <h3 class="fw-bold mb-2">ورود</h3>
+          <img src="{% static 'icons/logo.png' %}" class="menu-icon" width="70" height="70" alt="تیکت ">
           <p class="text-dark-50 small">اتوماسیون اداری صنایع غذایی درنا</p>
+          <h3 class="fw-bold mb-2">ورود</h3>
         </div>
 
         <form action="{% url 'accounts:user_login' %}" method="POST">
@@ -69,7 +70,7 @@
           </div>
 
           <div class="text-center small">
-            حساب ندارید؟ <a href="#">ثبت‌نام</a>
+            حساب ندارید؟ <a href="#">ثبت‌ نام کنید</a>
           </div>
         </form>
       </div>

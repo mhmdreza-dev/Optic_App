@@ -18,7 +18,7 @@
                 <th scope="col">
                     <div class="th-filter-box">
                         <span>عنوان تیکت</span>
-                        <input type="text" class="form-control column-filter" data-column="1" placeholder="عنوان">
+                        <input type="text" class="form-control column-filter" data-column="1" placeholder="جست و جو در عنوان یا محتوای تیکت">
                     </div>
                 </th>
 
@@ -73,8 +73,8 @@
 
         <tbody>
             {% for ticket in tickets %}
-            <tr class="ticket-row" data-url="{% url 'tickets:ticket_detail_ajax' ticket.id %}">
-
+            <tr class="ticket-row" data-url="{% url 'tickets:ticket_detail_ajax' ticket.id %}"
+            data-content="{{ ticket.description|default:'' }}">
                 <td class="fw-bold text-secondary">
                     {{ ticket.ticket_number }}
 
