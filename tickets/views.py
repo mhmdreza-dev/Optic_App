@@ -27,7 +27,7 @@ def tickets(request):
             destination_unit=request.user.unit).exclude(status='closed').prefetch_related("attachments", "messages").order_by('-id')
 
     
-        paginator = Paginator(tickets, 15)  # هر صفحه 7 تیکت
+        paginator = Paginator(tickets, 13)  # هر صفحه13 تیکت
 
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)

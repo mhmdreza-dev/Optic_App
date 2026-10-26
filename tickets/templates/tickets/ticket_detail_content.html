@@ -96,7 +96,7 @@
 
 <div class="ticket-user-box">
 
-
+<!--  بخش ثبت کننده تیکت -->
     <div class="ticket-user-row mt-2">
 
         <span class="ticket-user-label">
@@ -121,7 +121,7 @@
             اطلاعات تماس
         </button>
     </div>
-
+<!--  بخش برداشته کننده تیکت -->
     {% if ticket.taken_by %}
     <hr>
     <div class="ticket-user-row mt-2">
@@ -149,9 +149,38 @@
         </button>
 
     </div>
-
+<!--  بخش ارجاع شده تیکت -->
     {% endif %}
 
+        {% if ticket.reference_to %}
+    <hr>
+    <div class="ticket-user-row mt-2">
+
+        <span class="ticket-user-label">
+            <img src="{% static 'icons/account1.png' %}" width="30">
+            ارجاع شده به :
+        </span>
+
+        <span class="ticket-user-info">
+            {{ ticket.reference_to.first_name }} {{ ticket.reference_to.last_name }}
+            <span class="badge bg-light text-dark">{{ ticket.reference_to.position }} - واحد {{ ticket.reference_to.unit }}
+            </span>
+            |<span class="badge bg-light text-dark">{{ ticket.reference_to.branch.branch_name }}</span>
+        </span>
+
+        <button type="button" class="btn btn-outline-success btn-sm contact-btn" data-bs-container="body"
+            data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" data-bs-content="
+                موبایل: {{ ticket.reference_to.phone }}<br>
+                تلفن شعبه: {{ ticket.reference_to.branch.phone }}<br>
+                داخلی: {{ ticket.reference_to.phoneextensions }}
+            ">
+
+            اطلاعات تماس
+        </button>
+
+    </div>
+
+    {% endif %}
 </div>
 
 
