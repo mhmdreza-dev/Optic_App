@@ -215,6 +215,7 @@ def referenced_ticket (request):
         context = {
             'tickets': page_obj
         }
+
     #اگر کاربر پشتیبان نبود
     if not request.user.is_staff:
 

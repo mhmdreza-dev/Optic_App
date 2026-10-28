@@ -51,13 +51,24 @@
 
             <img src="{% static 'icons/ticket.svg' %}" class="menu-icon" alt="تیکت ">
             تیکت
+
         </div>
+        {% if opened_tickets_count > 0  %}
+            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.5rem;">جدید</small>
+            
+        {% elif referenced_tickets_count > 0  %}
+            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.5rem;">جدید</small>
+            
+        {% endif %}
         <span class="arrow">></span>
     </div>
     <div class="submenu">
 
-        <div class="submenu-item"><a class="submenu-item" data-bs-toggle="modal" data-bs-target="#new_ticket_modal">تیکت
-                جدید</a>
+        <div class="submenu-item">
+            <a class="submenu-item" data-bs-toggle="modal" data-bs-target="#new_ticket_modal">تیکت جدید</a>
+        </div>
+        <div class="submenu-item">
+            <a class="submenu-item" data-bs-toggle="modal" data-bs-target="#new_ticket_modal">انتقالی جدید</a>
         </div>
         <div class="submenu-item">
             <a class="submenu-item" href="{% url 'tickets:ticket_list' %}">فهرست تیکت ها</a>
