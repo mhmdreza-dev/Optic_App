@@ -159,6 +159,22 @@ class TicketMessage(models.Model):
         return f"پیام {self.id} در تیکت {self.ticket.id}"
 
     
+# -----------------------------
+# مدل نوتیفیکیشن ارجاع تیکت ها (TicketMessage)
+# -----------------------------   
 
+class TicketReferralNotification (models.Model):
 
-        
+    class Meta :
+        db_table = "TicketReferralNotification"
+        verbose_name = "نوتیفیکیشن ارجاع تیکت"
+        verbose_name_plural = "نوتیفیکیشن ارجاع تیکت ها"
+
+    ticket = models.ForeignKey(Ticket ,on_delete=models.CASCADE,related_name='Ticket_referral_notification')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.CASCADE ,related_name='sender_user')
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.CASCADE ,related_name='recipient_user')
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"اعلان برای {self.recipient} - تیکت {self.ticket_id}"
