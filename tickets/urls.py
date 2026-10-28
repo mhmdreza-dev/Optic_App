@@ -15,6 +15,7 @@ urlpatterns = [
     path ('tickets/new_ticket',views.new_ticket ,name = 'new_ticket'),
     path ('tickets/<int:ticket_id>/reassign_ticket/<int:colleagues_id>',views.reassign_ticket ,name = 'reassign_ticket'),
     path ('referenced_tickets_list/',views.referenced_ticket ,name= 'referenced_ticket'),
+    path('notifications/check/', views.check_notifications, name='check_notifications'),
 
 ]
 

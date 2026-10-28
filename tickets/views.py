@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect ,render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.contrib import messages
-from .models import Ticket
+from .models import Ticket ,TicketReferralNotification
 from accounts.models import User
 from .forms import TicketMessageForm
 from django.http import JsonResponse
@@ -153,7 +153,7 @@ def close_ticket (request , id):
         ticket.save()
         return JsonResponse({'status': 'success', 'message': 'تیکت با موفقیت بسته شد'})
 
-
+@login_required
 # تابع ایجاد تیکت جدید
 def new_ticket (request):
 
@@ -185,17 +185,90 @@ def new_ticket (request):
         # فحه‌ای که مودال توش قرار داره رو رندر کن (مثلاً ticket_list.html)
         return render(request, 'tickets/ticket_list.html', {'ticket_form': form})
 
-
+@login_required
 # تابع ارجاع تیکت جدید
 def reassign_ticket(request , ticket_id ,colleagues_id):
 
     ticket = get_object_or_404(Ticket, id = ticket_id)
     ticket.reference_to = User.objects.get(id=colleagues_id)
     ticket.save()
+
+    TicketReferralNotification.objects.create(
+        ticket = ticket ,
+        recipient = ticket.reference_to ,
+        sender=request.user,
+
+    )
     messages.success(request, "پیام شما با موفقیت ارجاع شد.")
     return redirect('tickets:ticket_list')
 
 
+
+def get_persian_timesince(dt):
+    """محاسبه مدت زمان گذشته به فارسی"""
+    diff = timezone.now() - dt
+    seconds = int(diff.total_seconds())
+
+    if seconds < 60:
+        return "لحظاتی پیش"
+    elif seconds < 3600:
+        return f"{seconds // 60} دقیقه پیش"
+    elif seconds < 86400:
+        return f"{seconds // 3600} ساعت پیش"
+    else:
+        return f"{seconds // 86400} روز پیش"
+
+
+
+
+@login_required
+def check_notifications (request):
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'notifications': []})
+
+    # دریافت اعلان‌های خوانده‌نشده کاربر جاری
+    notifications = TicketReferralNotification.objects.filter(
+        recipient=request.user, 
+        is_read=False
+    ).select_related('sender', 'ticket')
+
+    data = []
+    notif_ids = []
+
+    for notif in notifications:
+        # نام فرستنده (در صورت وجود نام کامل، وگرنه نام کاربری)
+        sender_name = notif.sender.first_name + ' ' + notif.sender.last_name
+        
+        # استخراج ایمن عنوان تیکت (بدون خطا خوردن روی title یا ticket_title)
+        ticket_title = (
+            getattr(notif.ticket, 'ticket_title', None) or 
+            getattr(notif.ticket, 'subject', None) or 
+            getattr(notif.ticket, 'title', None) or 
+            f"تیکت شماره {notif.ticket_id}"
+        )
+
+        data.append({
+            'id': notif.id,
+            'title': 'ارجاع تیکت جدید',
+            'ticket_id': notif.ticket_id,
+            'ticket_title': ticket_title,
+            'sender_name': sender_name,
+            'message': f'تیکت «{ticket_title}» توسط {sender_name} به شما ارجاع داده شد.',
+            'time': get_persian_timesince(notif.created_at)
+        })
+        notif_ids.append(notif.id)
+        notif.is_read = True
+        notif.save()
+
+
+    return JsonResponse({'notifications': data})
+
+
+
+
+
+@login_required
 # تابع نمایش تیک های ارجاع شده 
 def referenced_ticket (request):
 
