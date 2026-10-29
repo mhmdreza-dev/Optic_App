@@ -46,6 +46,30 @@
         <div class="submenu-item"><a class="submenu-item" href="#">فرایند مالی</a>
         </div>
     </div>
+
+    <div class="menu-item" onclick="toggleMenu(this)">
+        <div class="d-flex align-items-center">
+
+            <img src="{% static 'icons/inventory.svg' %}" class="menu-icon" alt="جریان کار" width="24" height="24">
+            انبار
+        </div>
+        <span class="arrow">></span>
+    </div>
+    <div class="submenu">
+        <div class="submenu-item"><a class="submenu-item" href="#">نامه ها</a>
+        </div>
+        <div class="submenu-item"><a class="submenu-item" href="#">فرایند ترابری </a>
+        </div>
+        <div class="submenu-item"><a class="submenu-item" href="#">فرایند اداری</a>
+        </div>
+        <div class="submenu-item"><a class="submenu-item" href="#">فرایند مالی</a>
+        </div>
+    </div>
+    
+
+
+
+
     <div class="menu-item" onclick="toggleMenu(this)">
         <div class="d-flex align-items-center">
 
@@ -73,7 +97,7 @@
         <div class="submenu-item">
             <a class="submenu-item" href="{% url 'tickets:ticket_list' %}">فهرست تیکت ها</a>
             {% if opened_tickets_count > 0 %}
-            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.5rem;">{{ opened_tickets_count }}</small>
+            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.6rem;">{{ opened_tickets_count }}</small>
             {% endif %}
         </div>
         <div class="submenu-item"><a class="submenu-item" href="{% url 'tickets:referenced_ticket' %}">ارجاع شده</a>
