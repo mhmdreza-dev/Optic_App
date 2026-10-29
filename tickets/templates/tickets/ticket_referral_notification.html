@@ -1,0 +1,66 @@
+
+      <!-- Toast Container در گوشه پایین سمت راست -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090;" id="toastContainer">
+        <!-- توست‌ها با جاوااسکریپت اینجا درج می‌شوند -->
+      </div>
+
+      <script>
+        
+        // الگوی آدرس جنگو با شناسه موقت 0
+        const ticketDetailAjaxTemplate = "{% url 'tickets:ticket_detail_ajax' 0 %}";
+
+        function fetchUserNotifications() {
+          fetch("{% url 'tickets:check_notifications' %}")
+            .then(response => response.json())
+            .then(data => {
+              if (data.notifications && data.notifications.length > 0) {
+                const container = document.getElementById('toastContainer');
+
+                data.notifications.forEach(item => {
+                  // ساخت آدرس ایجکس اختصاصی تیکت
+                  const ticketAjaxUrl = ticketDetailAjaxTemplate.replace('/0/', `/${item.ticket_id}/`).replace('0', item.ticket_id);
+
+                  const toastHtml = `
+              <div class="toast border-0 shadow-lg rounded-3 mb-3" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" style="min-width: 320px;">
+                <div class="toast-header bg-warning bg-opacity-25 text-dark border-bottom-0 rounded-top-3 py-2">
+                  <strong class="text-dark" style="font-size: 0.85rem;">${item.title}</strong>
+                  <small class="text-muted ms-auto me-2" style="font-size: 0.75rem;">${item.time}</small>
+                </div>
+                <div class="toast-body bg-white rounded-bottom-3 pt-2 pb-3 px-3">
+                  <div class="d-flex align-items-center mb-1 text-secondary" style="font-size: 0.8rem;">
+                    <span class="text-muted me-1">ارجاع دهنده:</span>
+                    <strong class="text-dark">${item.sender_name}</strong>
+                  </div>
+                  <div class="mb-3 text-secondary" style="font-size: 0.85rem; line-height: 1.5;">
+                    <span class="text-muted">موضوع:</span>
+                    <span class="fw-semibold text-dark">${item.ticket_title}</span>
+                  </div>
+                  
+                  <div class="d-flex justify-content-end gap-2 border-top pt-2">
+
+                    <button type="button" class="btn btn-light btn-sm text-secondary px-2 py-1 rounded-2 border" data-bs-dismiss="toast" style="font-size: 0.8rem;">
+                      بستن
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+                  container.insertAdjacentHTML('beforeend', toastHtml);
+
+                  // نمایش توست بدون بسته شدن خودکار (یا با دیلی دلخواه)
+                  const newToast = container.lastElementChild;
+                  const bsToast = new bootstrap.Toast(newToast, { autohide: false });
+                  bsToast.show();
+                });
+              }
+            })
+            .catch(err => console.log('Notification fetch error:', err));
+        }
+
+        // اجرای اولیه هنگام لود صفحه
+        document.addEventListener("DOMContentLoaded", function () {
+          fetchUserNotifications();
+          // در صورت تمایل به چک کردن مداوم هر ۱۰ ثانیه:
+          // setInterval(fetchUserNotifications, 10000);
+        });
+      </script>
