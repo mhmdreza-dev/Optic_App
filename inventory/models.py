@@ -15,7 +15,7 @@ class Transfers (models.Model):
     source_warehouse = models.ForeignKey(
                                         Store ,
                                         on_delete= models.CASCADE ,
-                                        ralated_name = 'source_warehouse',
+                                        related_name = 'source_warehouse',
                                         verbose_name = 'انبار مبدا' ,
                                         )
 
@@ -23,7 +23,7 @@ class Transfers (models.Model):
     destination_warehouse = models.ForeignKey(
                                         Store ,
                                         on_delete= models.CASCADE ,
-                                        ralated_name = 'destination_warehouse',
+                                        related_name = 'destination_warehouse',
                                         verbose_name = 'انبار مقصد' ,
                                         )
     
