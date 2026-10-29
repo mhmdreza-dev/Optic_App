@@ -102,8 +102,7 @@ def withdrawal_ticket (request,pk):
     
     return JsonResponse({'status': 'success', 'message': 'تیکت با موفقیت برداشته شد.'})
 
-
-
+# تابع اضافه کردن پیام به تیکت
 @login_required
 def add_ticket_message(request, id):
     ticket = get_object_or_404(Ticket, id=id)
@@ -203,7 +202,7 @@ def reassign_ticket(request , ticket_id ,colleagues_id):
     return redirect('tickets:ticket_list')
 
 
-
+# تابع تبدیل تاریخ به شمسی
 def get_persian_timesince(dt):
     """محاسبه مدت زمان گذشته به فارسی"""
     diff = timezone.now() - dt
@@ -219,9 +218,8 @@ def get_persian_timesince(dt):
         return f"{seconds // 86400} روز پیش"
 
 
-
-
 @login_required
+#تابع بررسی نوتیفیکیش ها
 def check_notifications (request):
 
     if not request.user.is_authenticated:
@@ -263,8 +261,6 @@ def check_notifications (request):
 
 
     return JsonResponse({'notifications': data})
-
-
 
 
 

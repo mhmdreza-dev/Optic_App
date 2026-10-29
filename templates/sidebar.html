@@ -56,7 +56,8 @@
         <span class="arrow">></span>
     </div>
     <div class="submenu">
-        <div class="submenu-item"><a class="submenu-item" href="#"> انتقالی جدید </a>
+        <div class="submenu-item">
+            <a class="submenu-item" data-bs-toggle="modal" data-bs-target="#new_transfer_modal">تیکت جدید</a>
         </div>
         <div class="submenu-item"><a class="submenu-item" href="#"> فهرست انتقالی </a>
         </div>
@@ -65,7 +66,7 @@
         <div class="submenu-item"><a class="submenu-item" href="#"> بسته شده </a>
         </div>
     </div>
-    
+
 
 
 
@@ -77,12 +78,12 @@
             تیکت
 
         </div>
-        {% if opened_tickets_count > 0  %}
-            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.5rem;">جدید</small>
-            
-        {% elif referenced_tickets_count > 0  %}
-            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.5rem;">جدید</small>
-            
+        {% if opened_tickets_count > 0 %}
+        <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.5rem;">جدید</small>
+
+        {% elif referenced_tickets_count > 0 %}
+        <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.5rem;">جدید</small>
+
         {% endif %}
         <span class="arrow">></span>
     </div>
@@ -97,12 +98,15 @@
         <div class="submenu-item">
             <a class="submenu-item" href="{% url 'tickets:ticket_list' %}">فهرست تیکت ها</a>
             {% if opened_tickets_count > 0 %}
-            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.6rem;">{{ opened_tickets_count }}</small>
+            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.6rem;">
+                {{ opened_tickets_count}}
+            </small>
             {% endif %}
         </div>
         <div class="submenu-item"><a class="submenu-item" href="{% url 'tickets:referenced_ticket' %}">ارجاع شده</a>
             {% if referenced_tickets_count > 0 %}
-            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.6rem;">{{ referenced_tickets_count }}</small>
+            <small class="badge-clean bg-danger px-1 py-0 rounded-1" style="font-size: 0.6rem;">
+                {{referenced_tickets_count }}</small>
             {% endif %}
         </div>
         <div class="submenu-item"><a class="submenu-item" href="{% url 'tickets:ticket_closed_list' %}">بسته شده</a>

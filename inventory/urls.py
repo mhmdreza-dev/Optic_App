@@ -7,6 +7,7 @@ app_name = 'inventory'
 
 urlpatterns = [
     path ('transfers_list/',views.transfers_list ,name= 'transfers_list'),
+    path ('new_transfer/',views.new_transfer ,name='new_transfer')
 
 
 ]

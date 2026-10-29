@@ -1,0 +1,83 @@
+<!-- مودال ثبت انتقالی -->
+<div class="modal fade" id="new_transfer_modal" tabindex="-1" aria-labelledby="newTransferModalLabel" aria-hidden="true"
+    dir="rtl">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+            <!-- هدر مودال -->
+            <div
+                class="modal-header bg-warning bg-opacity-25 border-bottom-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                <h6 class="modal-title fw-bold text-dark m-0" id="newTransferModalLabel">
+                    <i class="bi bi-box-seam me-1"></i> ایجاد تیکت انتقالی بین انبارها
+                </h6>
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- بدنه فرم مودال -->
+            <form method="POST" action="{% url 'inventory:new_transfer' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <div class="modal-body px-4 py-3">
+
+                    {% if transfer_form.non_field_errors %}
+                    <div class="alert alert-danger py-2 px-3 small rounded-2 mb-3">
+                        {{ transfer_form.non_field_errors.0 }}
+                    </div>
+                    {% endif %}
+
+                    <div class="row g-3">
+                        <!-- عنوان انتقالی -->
+                        <div class="col-md-8">
+                            <label class="form-label small text-muted mb-1">عنوان انتقالی</label>
+                            {{ transfer_form.transfer_title }}
+                            {{ transfer_form.ticket_title.errors }}
+                        </div>
+
+                        <!-- واحد مقصد -->
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted mb-1">واحد مقصد</label>
+                            {{ transfer_form.destination_unit }}
+                            {{ transfer_form.destination_unit.errors }}
+                        </div>
+
+                        <!-- از انبار (مبدا) -->
+                        <div class="col-md-6">
+                            <label class="form-label small text-muted mb-1">
+                                <i class="bi bi-box-arrow-up-right text-danger me-1"></i> از انبار (مبدأ)
+                            </label>
+                            {{ transfer_form.source_warehouse }}
+                            {{ transfer_form.source_warehouse.errors }}
+                        </div>
+
+                        <!-- به انبار (مقصد) -->
+                        <div class="col-md-6">
+                            <label class="form-label small text-muted mb-1">
+                                <i class="bi bi-box-arrow-in-down-left text-success me-1"></i> به انبار (مقصد)
+                            </label>
+                            {{ transfer_form.destination_warehouse }}
+                            {{ transfer_form.destination_warehouse.errors }}
+                        </div>
+
+                        <!-- توضیحات یا اقلام انتقالی -->
+                        <div class="col-12">
+                            <label class="form-label small text-muted mb-1">شرح اقلام و توضیحات</label>
+                            {{ transfer_form.description }}
+                            {{ transfer_form.description.errors }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- فوتر مودال -->
+                <div class="modal-footer bg-light border-top-0 px-4 py-2 d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary px-3 rounded-2"
+                        data-bs-dismiss="modal">انصراف</button>
+                    <button type="submit" class="btn btn-sm btn-warning text-dark px-4 rounded-2 fw-medium shadow-sm">
+                        ثبت و ارسال انتقالی
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

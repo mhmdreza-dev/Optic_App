@@ -10,6 +10,16 @@ class Transfers (models.Model):
         verbose_name_plural = 'انتقالی ها'
 
 
+    # عوان انتقالی
+    transfer_title = models.CharField(
+                                    max_length= 100 ,
+                                    verbose_name='عنوان انتقالی'
+                                    )
+
+    #شرح انتقالی
+    description = models.TextField(
+                                    verbose_name="شرح انتقالی"
+                                    )
 
     # انبار مبدا
     source_warehouse = models.ForeignKey(
