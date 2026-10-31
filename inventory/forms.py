@@ -1,6 +1,6 @@
 from django import forms
 from .models import Transfers
-from accounts.models import Store, Unit
+from accounts.models import Store, Unit ,User
 
 class NewTransferForm(forms.ModelForm):
     class Meta:
@@ -34,29 +34,27 @@ class NewTransferForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        # 1. استخراج کاربر از ورودی‌ها
+        self.user = kwargs.pop('user', None)
+        
+        # 2. فراخوانی سازنده اصلی جنگو
         super().__init__(*args, **kwargs)
-
-        # تنظیم متن پیش‌فرض برای گزینه‌ها
+        
+        # 3. تنظیم متون پیش‌فرض گزینه‌ها (از متد اول شما)
         self.fields['source_warehouse'].empty_label = "--- انتخاب انبار مبدأ ---"
         self.fields['destination_warehouse'].empty_label = "--- انتخاب انبار مقصد ---"
         self.fields['destination_unit'].empty_label = "--- انتخاب واحد مقصد (اختیاری) ---"
-        self.fields['destination_unit'].required = False
+        self.fields['destination_unit'].required = False  # قبلاً ارور نال داشت، اینجا باید اختیاری (False) باشد
 
-        # فیلتر انبارهای مبدأ بر اساس کاربر / شعبه
-        if user:
-            if not user.is_superuser and hasattr(user, 'branch') and user.branch:
-                allowed_stores = Store.objects.filter(branch=user.branch)
-                self.fields['source_warehouse'].queryset = allowed_stores
+        # 4. بررسی لاگ کاربر در ترمینال
+        print("کاربر در فرم دریافت شد:", self.user)
 
-                # اگر کاربر فقط به یک انبار دسترسی دارد، خودکار انتخاب شود
-                if allowed_stores.count() == 1:
-                    self.fields['source_warehouse'].initial = allowed_stores.first()
-            else:
-                self.fields['source_warehouse'].queryset = Store.objects.all()
+        # 5. فیلتر کردن انبار مبدأ بر اساس شعبه کاربر
+        if self.user and hasattr(self.user, 'branch') and self.user.branch:
+            user_branch = self.user.branch
+            self.fields['source_warehouse'].queryset = Store.objects.filter(branch=user_branch)
+            self.fields['destination_warehouse'].queryset = Store.objects.filter(branch=user_branch)
 
-        # لیست تمام انبارهای مقصد
-        self.fields['destination_warehouse'].queryset = Store.objects.all()
 
     def clean(self):
         cleaned_data = super().clean()

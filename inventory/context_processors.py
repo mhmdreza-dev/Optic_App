@@ -6,6 +6,20 @@ def global_transfer_form(request):
         'transfer_form': NewTransferForm()
     }
 
+
+def transfer_modal_context(request):
+    """
+    این تابع فرم انتقالی را همراه با یوزر فعال در دسترس تمام صفحات قرار می‌دهد
+    """
+    if request.user.is_authenticated:
+        return {
+            'global_transfer_form': NewTransferForm(user=request.user)
+        }
+    return {
+        'global_transfer_form': None
+    }
+
+
 # def ticket_stats_processor(request):
 #     # مقدار پیش‌فرض صفر
 #     opened_tickets_count = 0

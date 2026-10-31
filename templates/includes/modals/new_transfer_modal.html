@@ -21,10 +21,10 @@
                 <div class="modal-body px-4 py-3">
 
                     <!-- خطاهای کلی فرم (Non-field errors) -->
-                    {% if transfer_form.non_field_errors %}
+                    {% if global_transfer_form.non_field_errors %}
                     <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3 shadow-none">
                         <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                        {{ transfer_form.non_field_errors.0 }}
+                        {{ global_transfer_form.non_field_errors.0 }}
                     </div>
                     {% endif %}
 
@@ -34,10 +34,10 @@
                             <label class="form-label small text-muted mb-1">
                                 <span class="text-danger">*</span> عنوان انتقالی
                             </label>
-                            {{ transfer_form.transfer_title }}
-                            {% if transfer_form.transfer_title.errors %}
+                            {{ global_transfer_form.transfer_title }}
+                            {% if global_transfer_form.transfer_title.errors %}
                             <div class="text-danger small mt-1">
-                                {{ transfer_form.transfer_title.errors.0 }}
+                                {{ global_transfer_form.transfer_title.errors.0 }}
                             </div>
                             {% endif %}
                         </div>
@@ -45,10 +45,10 @@
                         <!-- واحد مقصد -->
                         <div class="col-md-4">
                             <label class="form-label small text-muted mb-1">واحد مقصد</label>
-                            {{ transfer_form.destination_unit }}
-                            {% if transfer_form.destination_unit.errors %}
+                            {{ global_transfer_form.destination_unit }}
+                            {% if global_transfer_form.destination_unit.errors %}
                             <div class="text-danger small mt-1">
-                                {{ transfer_form.destination_unit.errors.0 }}
+                                {{ global_transfer_form.destination_unit.errors.0 }}
                             </div>
                             {% endif %}
                         </div>
@@ -59,10 +59,10 @@
                                 <i class="bi bi-box-arrow-up-right text-danger me-1"></i>
                                 <span class="text-danger">*</span> از انبار (مبدأ)
                             </label>
-                            {{ transfer_form.source_warehouse }}
-                            {% if transfer_form.source_warehouse.errors %}
+                            {{ global_transfer_form.source_warehouse }}
+                            {% if global_transfer_form.source_warehouse.errors %}
                             <div class="text-danger small mt-1">
-                                {{ transfer_form.source_warehouse.errors.0 }}
+                                {{ global_transfer_form.source_warehouse.errors.0 }}
                             </div>
                             {% endif %}
                         </div>
@@ -73,10 +73,10 @@
                                 <i class="bi bi-box-arrow-in-down-left text-success me-1"></i>
                                 <span class="text-danger">*</span> به انبار (مقصد)
                             </label>
-                            {{ transfer_form.destination_warehouse }}
-                            {% if transfer_form.destination_warehouse.errors %}
+                            {{ global_transfer_form.destination_warehouse }}
+                            {% if global_transfer_form.destination_warehouse.errors %}
                             <div class="text-danger small mt-1">
-                                {{ transfer_form.destination_warehouse.errors.0 }}
+                                {{ global_transfer_form.destination_warehouse.errors.0 }}
                             </div>
                             {% endif %}
                         </div>
@@ -84,10 +84,10 @@
                         <!-- توضیحات یا اقلام انتقالی -->
                         <div class="col-12">
                             <label class="form-label small text-muted mb-1">شرح اقلام و توضیحات</label>
-                            {{ transfer_form.description }}
-                            {% if transfer_form.description.errors %}
+                            {{ global_transfer_form.description }}
+                            {% if global_transfer_form.description.errors %}
                             <div class="text-danger small mt-1">
-                                {{ transfer_form.description.errors.0 }}
+                                {{ global_transfer_form.description.errors.0 }}
                             </div>
                             {% endif %}
                         </div>

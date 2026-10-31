@@ -31,7 +31,7 @@ class Branch(models.Model):
         return f"{self.branch_id}-{self.branch_name}"
 
 # -----------------------------
-# مدل شعبه (Store)
+# مدل انبار (Store)
 # -----------------------------
 
 class Store (models.Model):
