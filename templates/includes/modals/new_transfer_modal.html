@@ -10,17 +10,20 @@
                 <h6 class="modal-title fw-bold text-dark m-0" id="newTransferModalLabel">
                     <i class="bi bi-box-seam me-1"></i> ایجاد تیکت انتقالی بین انبارها
                 </h6>
-                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="بستن"></button>
             </div>
 
             <!-- بدنه فرم مودال -->
-            <form method="POST" action="{% url 'inventory:new_transfer' %}">
+            <form method="POST" action="{% url 'inventory:new_transfer' %}" id="transferForm">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
                 <div class="modal-body px-4 py-3">
 
+                    <!-- خطاهای کلی فرم (Non-field errors) -->
                     {% if transfer_form.non_field_errors %}
-                    <div class="alert alert-danger py-2 px-3 small rounded-2 mb-3">
+                    <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3 shadow-none">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
                         {{ transfer_form.non_field_errors.0 }}
                     </div>
                     {% endif %}
@@ -28,41 +31,65 @@
                     <div class="row g-3">
                         <!-- عنوان انتقالی -->
                         <div class="col-md-8">
-                            <label class="form-label small text-muted mb-1">عنوان انتقالی</label>
+                            <label class="form-label small text-muted mb-1">
+                                <span class="text-danger">*</span> عنوان انتقالی
+                            </label>
                             {{ transfer_form.transfer_title }}
-                            {{ transfer_form.ticket_title.errors }}
+                            {% if transfer_form.transfer_title.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ transfer_form.transfer_title.errors.0 }}
+                            </div>
+                            {% endif %}
                         </div>
 
                         <!-- واحد مقصد -->
                         <div class="col-md-4">
                             <label class="form-label small text-muted mb-1">واحد مقصد</label>
                             {{ transfer_form.destination_unit }}
-                            {{ transfer_form.destination_unit.errors }}
+                            {% if transfer_form.destination_unit.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ transfer_form.destination_unit.errors.0 }}
+                            </div>
+                            {% endif %}
                         </div>
 
                         <!-- از انبار (مبدا) -->
                         <div class="col-md-6">
-                            <label class="form-label small text-muted mb-1">
-                                <i class="bi bi-box-arrow-up-right text-danger me-1"></i> از انبار (مبدأ)
+                            <label class="form-label small  text-muted mb-1">
+                                <i class="bi bi-box-arrow-up-right text-danger me-1"></i>
+                                <span class="text-danger">*</span> از انبار (مبدأ)
                             </label>
                             {{ transfer_form.source_warehouse }}
-                            {{ transfer_form.source_warehouse.errors }}
+                            {% if transfer_form.source_warehouse.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ transfer_form.source_warehouse.errors.0 }}
+                            </div>
+                            {% endif %}
                         </div>
 
                         <!-- به انبار (مقصد) -->
                         <div class="col-md-6">
                             <label class="form-label small text-muted mb-1">
-                                <i class="bi bi-box-arrow-in-down-left text-success me-1"></i> به انبار (مقصد)
+                                <i class="bi bi-box-arrow-in-down-left text-success me-1"></i>
+                                <span class="text-danger">*</span> به انبار (مقصد)
                             </label>
                             {{ transfer_form.destination_warehouse }}
-                            {{ transfer_form.destination_warehouse.errors }}
+                            {% if transfer_form.destination_warehouse.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ transfer_form.destination_warehouse.errors.0 }}
+                            </div>
+                            {% endif %}
                         </div>
 
                         <!-- توضیحات یا اقلام انتقالی -->
                         <div class="col-12">
                             <label class="form-label small text-muted mb-1">شرح اقلام و توضیحات</label>
                             {{ transfer_form.description }}
-                            {{ transfer_form.description.errors }}
+                            {% if transfer_form.description.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ transfer_form.description.errors.0 }}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -71,9 +98,11 @@
                 <!-- فوتر مودال -->
                 <div class="modal-footer bg-light border-top-0 px-4 py-2 d-flex justify-content-end gap-2">
                     <button type="button" class="btn btn-sm btn-outline-secondary px-3 rounded-2"
-                        data-bs-dismiss="modal">انصراف</button>
+                        data-bs-dismiss="modal">
+                        انصراف
+                    </button>
                     <button type="submit" class="btn btn-sm btn-warning text-dark px-4 rounded-2 fw-medium shadow-sm">
-                        ثبت و ارسال انتقالی
+                        <i class="bi bi-check2-circle me-1"></i> ثبت و ارسال انتقالی
                     </button>
                 </div>
             </form>
@@ -81,3 +110,54 @@
         </div>
     </div>
 </div>
+
+<!-- استایل ظاهری فشرده و راست‌چین برای Select2 -->
+<style>
+    .select2-container--bootstrap-5 .select2-selection {
+        font-size: 0.85rem !important;
+        min-height: 31px !important;
+        padding: 3px 8px !important;
+        border-radius: 0.375rem !important;
+    }
+
+    .select2-container--bootstrap-5 .select2-dropdown .select2-results__option {
+        font-size: 0.82rem;
+        padding: 5px 10px;
+    }
+
+    .select2-container--bootstrap-5 .select2-search__field {
+        font-size: 0.82rem !important;
+    }
+</style>
+
+<!-- اسکریپت راه‌اندازی و مدیریت مودال -->
+<script>
+    $(document).ready(function () {
+        const transferModal = $('#new_transfer_modal');
+
+        // فعال‌سازی Select2 هنگام باز شدن مودال
+        transferModal.on('shown.bs.modal', function () {
+            $(this).find('.select2-searchable').each(function () {
+                // اگر قبلا ساخته نشده، مجدداً نسازد
+                if (!$(this).hasClass("select2-hidden-accessible")) {
+                    $(this).select2({
+                        theme: 'bootstrap-5',
+                        dir: 'rtl',
+                        width: '100%',
+                        dropdownParent: transferModal,
+                        placeholder: 'جستجو و انتخاب...'
+                    });
+                }
+            });
+
+            // فوکوس خودکار روی فیلد عنوان
+            $('#id_transfer_title').trigger('focus');
+        });
+
+        // ریست کردن ارورها و وضعیت فرم هنگام بسته شدن مودال
+        transferModal.on('hidden.bs.modal', function () {
+            $(this).find('.text-danger.small').remove();
+            $(this).find('.alert-danger').remove();
+        });
+    });
+</script>
