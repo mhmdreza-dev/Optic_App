@@ -23,4 +23,5 @@ urlpatterns = [
     path ('tickets/',include('tickets.urls' ,namespace = 'tickets')),
     path ('education/', include('education.urls', namespace='education')),
     path ('inventory/', include('inventory.urls', namespace='inventory')),
+    path ('products/' ,include('products.urls') ,namespace = 'products'),
 ]
