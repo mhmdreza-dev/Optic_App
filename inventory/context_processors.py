@@ -1,4 +1,4 @@
-from .forms import NewTransferForm
+from .forms import NewTransferForm,TransferItemFormSet
 from .models import Transfers
 
 def global_transfer_form(request):
@@ -13,7 +13,9 @@ def transfer_modal_context(request):
     """
     if request.user.is_authenticated:
         return {
-            'global_transfer_form': NewTransferForm(user=request.user)
+            'global_transfer_form': NewTransferForm(user=request.user),
+
+            'global_item_formset': TransferItemFormSet(prefix='items'),
         }
     return {
         'global_transfer_form': None

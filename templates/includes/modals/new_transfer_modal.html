@@ -1,12 +1,41 @@
-<!-- مودال ثبت انتقالی -->
-<div class="modal fade" id="new_transfer_modal" tabindex="-1" aria-labelledby="newTransferModalLabel" aria-hidden="true"
-    dir="rtl">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+<!-- لود استایل‌های Select2 (اگر در base.html لود نشده است) -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" rel="stylesheet" />
+
+<!-- استایل ظاهری فشرده، راست‌چین و متناسب با مودال -->
+<style>
+    /* تنظیمات تم بوت‌استرپ ۵ برای سلکت۲ داخل مودال */
+    .select2-container--bootstrap-5 .select2-selection {
+        font-size: 0.85rem !important;
+        min-height: 34px !important;
+        padding: 3px 8px !important;
+        border-radius: 0.375rem !important;
+    }
+    .select2-container--bootstrap-5 .select2-dropdown .select2-results__option {
+        font-size: 0.82rem;
+        padding: 6px 10px;
+    }
+    .select2-container--bootstrap-5 .select2-search__field {
+        font-size: 0.82rem !important;
+    }
+    /* حل مشکل اولویت لایه لودینگ منوی بازشونده Select2 در مودال */
+    .select2-container {
+        z-index: 99999 !important;
+    }
+    .table-items th {
+        font-size: 0.8rem;
+        font-weight: 600;
+        background-color: #f8f9fa;
+    }
+</style>
+
+<!-- مودال ثبت انتقالی (اندازه modal-xl برای جا شدن جدول کالاها) -->
+<div class="modal fade" id="new_transfer_modal" tabindex="-1" aria-labelledby="newTransferModalLabel" aria-hidden="true" dir="rtl">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
             <!-- هدر مودال -->
-            <div
-                class="modal-header bg-warning bg-opacity-25 border-bottom-0 py-3 px-4 d-flex justify-content-between align-items-center">
+            <div class="modal-header bg-warning bg-opacity-25 border-bottom-0 py-3 px-4 d-flex justify-content-between align-items-center">
                 <h6 class="modal-title fw-bold text-dark m-0" id="newTransferModalLabel">
                     <i class="bi bi-box-seam me-1"></i> ایجاد تیکت انتقالی بین انبارها
                 </h6>
@@ -20,7 +49,7 @@
 
                 <div class="modal-body px-4 py-3">
 
-                    <!-- خطاهای کلی فرم (Non-field errors) -->
+                    <!-- خطاهای کلی فرم اصلی (Non-field errors) -->
                     {% if global_transfer_form.non_field_errors %}
                     <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3 shadow-none">
                         <i class="bi bi-exclamation-triangle-fill me-1"></i>
@@ -28,7 +57,8 @@
                     </div>
                     {% endif %}
 
-                    <div class="row g-3">
+                    <!-- بخش ۱: اطلاعات انبار و عنوان -->
+                    <div class="row g-3 mb-3">
                         <!-- عنوان انتقالی -->
                         <div class="col-md-8">
                             <label class="form-label small text-muted mb-1">
@@ -55,7 +85,7 @@
 
                         <!-- از انبار (مبدا) -->
                         <div class="col-md-6">
-                            <label class="form-label small  text-muted mb-1">
+                            <label class="form-label small text-muted mb-1">
                                 <i class="bi bi-box-arrow-up-right text-danger me-1"></i>
                                 <span class="text-danger">*</span> از انبار (مبدأ)
                             </label>
@@ -80,10 +110,95 @@
                             </div>
                             {% endif %}
                         </div>
+                    </div>
 
-                        <!-- توضیحات یا اقلام انتقالی -->
+                    <hr class="text-muted opacity-25 my-3">
+
+                    <!-- بخش ۲: جدول داینامیک اقلام کالا -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label small fw-bold text-dark m-0">
+                            <i class="bi bi-list-check me-1"></i> لیست اقلام انتقالی
+                        </label>
+                        <button type="button" id="add-item-row" class="btn btn-sm btn-outline-primary rounded-2 px-3 py-1">
+                            <i class="bi bi-plus-circle me-1"></i> افزودن ردیف کالا
+                        </button>
+                    </div>
+
+                    <!-- مدیریت فرم‌ست جنگو (بسیار حیاتی) -->
+                    {{ global_item_formset.management_form }}
+
+                    <div class="table-responsive border rounded-3 mb-3">
+                        <table class="table table-bordered table-hover align-middle mb-0 table-items">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="width: 45%;">کد و نام کالا <span class="text-danger">*</span></th>
+                                    <th style="width: 18%;">واحد سنجش <span class="text-danger">*</span></th>
+                                    <th style="width: 15%;">تعداد <span class="text-danger">*</span></th>
+                                    <th style="width: 15%;">قیمت واحد (ریال)</th>
+                                    <th style="width: 7%;">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item-rows">
+                                {% for item_form in global_item_formset %}
+                                <tr class="item-row">
+                                    {{ item_form.id }}
+                                    <td>
+                                        {{ item_form.product }}
+                                        {% if item_form.product.errors %}
+                                        <div class="text-danger small">{{ item_form.product.errors.0 }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ item_form.unit }}
+                                        {% if item_form.unit.errors %}
+                                        <div class="text-danger small">{{ item_form.unit.errors.0 }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ item_form.quantity }}
+                                        {% if item_form.quantity.errors %}
+                                        <div class="text-danger small">{{ item_form.quantity.errors.0 }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ item_form.consumer_price }}
+                                        {% if item_form.consumer_price.errors %}
+                                        <div class="text-danger small">{{ item_form.consumer_price.errors.0 }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="d-none">{{ item_form.DELETE }}</span>
+                                        <button type="button" class="btn btn-sm btn-outline-danger border-0 remove-row" title="حذف این سطر">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- قالب خالی برای ساخت ردیف‌های جدید توسط JS -->
+                    <template id="empty-item-row">
+                        <tr class="item-row">
+                            {{ global_item_formset.empty_form.id }}
+                            <td>{{ global_item_formset.empty_form.product }}</td>
+                            <td>{{ global_item_formset.empty_form.unit }}</td>
+                            <td>{{ global_item_formset.empty_form.quantity }}</td>
+                            <td>{{ global_item_formset.empty_form.consumer_price }}</td>
+                            <td class="text-center">
+                                <span class="d-none">{{ global_item_formset.empty_form.DELETE }}</span>
+                                <button type="button" class="btn btn-sm btn-outline-danger border-0 remove-row" title="حذف این سطر">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+
+                    <!-- بخش ۳: توضیحات تکمیلی -->
+                    <div class="row">
                         <div class="col-12">
-                            <label class="form-label small text-muted mb-1">شرح اقلام و توضیحات</label>
+                            <label class="form-label small text-muted mb-1">توضیحات تکمیلی انتقالی</label>
                             {{ global_transfer_form.description }}
                             {% if global_transfer_form.description.errors %}
                             <div class="text-danger small mt-1">
@@ -97,8 +212,7 @@
 
                 <!-- فوتر مودال -->
                 <div class="modal-footer bg-light border-top-0 px-4 py-2 d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary px-3 rounded-2"
-                        data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-sm btn-outline-secondary px-3 rounded-2" data-bs-dismiss="modal">
                         انصراف
                     </button>
                     <button type="submit" class="btn btn-sm btn-warning text-dark px-4 rounded-2 fw-medium shadow-sm">
@@ -111,53 +225,75 @@
     </div>
 </div>
 
-<!-- استایل ظاهری فشرده و راست‌چین برای Select2 -->
-<style>
-    .select2-container--bootstrap-5 .select2-selection {
-        font-size: 0.85rem !important;
-        min-height: 31px !important;
-        padding: 3px 8px !important;
-        border-radius: 0.375rem !important;
-    }
+<!-- اسکریپت‌ها (اگر در صفحه لود نشده‌اند) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    .select2-container--bootstrap-5 .select2-dropdown .select2-results__option {
-        font-size: 0.82rem;
-        padding: 5px 10px;
-    }
-
-    .select2-container--bootstrap-5 .select2-search__field {
-        font-size: 0.82rem !important;
-    }
-</style>
-
-<!-- اسکریپت راه‌اندازی و مدیریت مودال -->
+<!-- جاوااسکریپت اختصاصی مدیریت مودال، افزودن ردیف و سرچ کالا -->
 <script>
-    $(document).ready(function () {
-        const transferModal = $('#new_transfer_modal');
+$(document).ready(function () {
+    const $transferModal = $('#new_transfer_modal');
 
-        // فعال‌سازی Select2 هنگام باز شدن مودال
-        transferModal.on('shown.bs.modal', function () {
-            $(this).find('.select2-searchable').each(function () {
-                // اگر قبلا ساخته نشده، مجدداً نسازد
-                if (!$(this).hasClass("select2-hidden-accessible")) {
-                    $(this).select2({
-                        theme: 'bootstrap-5',
-                        dir: 'rtl',
-                        width: '100%',
-                        dropdownParent: transferModal,
-                        placeholder: 'جستجو و انتخاب...'
-                    });
-                }
-            });
-
-            // فوکوس خودکار روی فیلد عنوان
-            $('#id_transfer_title').trigger('focus');
+    // تابع برای فعال‌سازی Select2 روی دراپ‌داون‌ها داخل مودال
+    function initModalSelect2(element) {
+        $(element).select2({
+            theme: 'bootstrap-5',
+            dir: 'rtl',
+            width: '100%',
+            dropdownParent: $transferModal, // الزامی برای باز شدن صحیح منوی جستجو داخل مدال
+            placeholder: 'جستجو با کد یا نام کالا...',
+            allowClear: true
         });
+    }
 
-        // ریست کردن ارورها و وضعیت فرم هنگام بسته شدن مودال
-        transferModal.on('hidden.bs.modal', function () {
-            $(this).find('.text-danger.small').remove();
-            $(this).find('.alert-danger').remove();
+    // ۱. فعال‌سازی Select2 برای سطرهای اولیه هنگام باز شدن کامل مودال
+    $transferModal.on('shown.bs.modal', function () {
+        $transferModal.find('.select2-product').each(function () {
+            if (!$(this).hasClass("select2-hidden-accessible")) {
+                initModalSelect2(this);
+            }
+        });
+        $('#id_transfer_title').trigger('focus');
+    });
+
+    // ۲. کلیک روی دکمه افزودن ردیف جدید
+    $('#add-item-row').on('click', function () {
+        const $totalForms = $('#id_items-TOTAL_FORMS');
+        const formIdx = parseInt($totalForms.val(), 10);
+        
+        // جایگزین کردن prefix پیش‌فرض با اندیس جدید
+        const rowHtml = $('#empty-item-row').html().replaceAll('__prefix__', formIdx);
+        const $newRow = $(rowHtml);
+
+        // افزودن به جدول
+        $('#item-rows').append($newRow);
+
+        // آپدیت مقدار شمارنده فرم‌ها
+        $totalForms.val(formIdx + 1);
+
+        // راه‌اندازی فوری Select2 برای سطر جدید
+        $newRow.find('.select2-product').each(function () {
+            initModalSelect2(this);
         });
     });
+
+    // ۳. حذف یک ردیف
+    $('#item-rows').on('click', '.remove-row', function () {
+        const $allRows = $('#item-rows .item-row:visible');
+        if ($allRows.length <= 1) {
+            alert('حداقل یک ردیف کالا برای انتقالی الزامی است.');
+            return;
+        }
+
+        const $row = $(this).closest('.item-row');
+        const $deleteCheckbox = $row.find('input[name$="-DELETE"]');
+
+        if ($deleteCheckbox.length) {
+            $deleteCheckbox.prop('checked', true);
+            $row.hide();
+        } else {
+            $row.remove();
+        }
+    });
+});
 </script>

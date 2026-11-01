@@ -1,7 +1,11 @@
 from django import forms
 from .models import Transfers
 from accounts.models import Store, Unit ,User
-
+from django import forms
+from products.models import Product  # نام اپ خودتان را بگذارید
+from django.forms import inlineformset_factory
+from .models import Transfers, TransferItems
+# فرم ایجاد انتقالی
 class NewTransferForm(forms.ModelForm):
     class Meta:
         model = Transfers
@@ -90,3 +94,72 @@ class NewTransferForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+# فرم انخاب کالای انتقالی
+# inventory/forms.py
+
+
+
+
+class ProductChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        # نمایش کد و نام کالا در لیست گزینه‌ها
+        return f"{obj.productid} — {obj.productname}"
+
+
+class TransferItemForm(forms.ModelForm):
+    product = ProductChoiceField(
+        queryset=Product.objects.all().order_by("productname"),
+        empty_label="--- انتخاب کالا یا کد ---",
+        label="کالا و کد",
+        widget=forms.Select(
+            attrs={
+                # کلاس select2-product برای فعال‌سازی جستجو با JS
+                "class": "form-select select2-product",
+                "style": "width: 100%;",
+            }
+        ),
+    )
+
+    class Meta:
+        model = TransferItems
+        fields = ["product", "unit", "quantity", "consumer_price"]
+        widgets = {
+            "unit": forms.Select(attrs={"class": "form-select"}),
+            "quantity": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "step": "0.001",
+                    "min": "0.001",
+                    "placeholder": "مقدار",
+                }
+            ),
+            "unit_price": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "step": "1",
+                    "min": "0",
+                    "placeholder": "قیمت واحد",
+                }
+            ),
+            "consumer_price": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "step": "1",
+                    "min": "0",
+                    "placeholder": "قیمت واحد",
+                }
+            ),
+        }
+
+
+TransferItemFormSet = inlineformset_factory(
+    Transfers,
+    TransferItems,
+    form=TransferItemForm,
+    extra=1,
+    can_delete=True,
+    min_num=1,
+    validate_min=True,
+)

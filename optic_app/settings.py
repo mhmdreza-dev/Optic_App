@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'education.apps.EducationConfig',
     'tickets.apps.TicketsConfig',
     'inventory.apps.InventoryConfig',
+    'products.apps.ProductsConfig',
     'jalali_date',
     'django_jalali',
 ]

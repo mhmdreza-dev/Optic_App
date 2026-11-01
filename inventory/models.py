@@ -1,7 +1,10 @@
 from django.db import models
 from accounts.models import User ,Unit ,Store
+
 # Create your models here.
 
+
+#کلاس مدل انتقالی 
 class Transfers (models.Model):
 
     class Meta:
@@ -92,3 +95,50 @@ class Transfers (models.Model):
                                             blank=True ,
                                             verbose_name='زمان پایان تیکت'
                                            )
+
+# کلاس مدل آیتم های انتقالی
+class TransferItems (models.Model):
+
+    class Meta :
+        db_table = 'transferitem'
+        verbose_name = 'آتیم انتقالی'
+        verbose_name_plural = 'آیتم های انتقالی'
+        
+    UNIT_CHOICES = [
+                    ("number", "عدد"),
+                    ("box", "جعبه"),
+                    ("carton", "کارتن"),
+                ]
+    # ارتباط با مدل انتقلی
+    transfer = models.ForeignKey(
+        "Transfers",
+        on_delete=models.CASCADE,
+        related_name="items",
+        verbose_name="انتقالی",
+    )
+    # ارتباط با مدل کالا ها
+    product = models.ForeignKey(
+        "products.Product",  # نام مدل unmanaged کالاهای شما
+        on_delete=models.PROTECT,
+        to_field='productid', # صراحتاً بگویید به productid وصل شود
+        db_column="product_id",
+        verbose_name="کالا",
+    )
+
+    unit = models.CharField(
+        max_length=20,
+        choices=UNIT_CHOICES,
+        verbose_name="واحد سنجش",
+    )
+
+    quantity = models.IntegerField(
+        verbose_name="تعداد",
+    )
+
+    consumer_price = models.IntegerField(
+        verbose_name="قیمت مصرف کننده",
+    )
+
+
+    def __str__(self):
+        return f"{self.product} - {self.quantity} {self.unit}"
